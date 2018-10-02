@@ -1,24 +1,35 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
+
+#include <vector>
+#include <list>
+
 #include "node.hpp"
+#include "edge.hpp"
 
-template <typename T>
-class Graph{
-	int nnodes;
-	Nodes<T>* nodes;
-	bool directed;
-public:
-	Graph(){};
-	Graph(int nodos, bool directed = false)
-		: nnodes(nodos), directed(directed)
-	{
-		nodes = new Nodes[nnodes];
-	}
-	void insert(T value, T neighbord, int x,int y, int z){
-		int pos;
-		for(pos = 0; i<nnodes; i++){
-
-		}
-	}
+struct Traits {
+	typedef char N;
+	typedef int E;
 };
+
+template <typename Tr>
+class Graph {
+	NodeSeq nodes;
+	NodeIte ni;
+	EdgeIte ei;
+	
+public:
+	typedef Graph<Tr> self;
+	typedef Node<self> node;
+	typedef Edge<self> edge;
+	typedef std::vector<node*> NodeSeq;
+	typedef std::list<edge*> EdgeSeq;
+	typedef typename Tr::N N;
+	typedef typename Tr::E E;
+	typedef typename NodeSeq::iterator NodeIte;
+	typedef typename EdgeSeq::iterator EdgeIte;
+};
+
+typedef Graph<Traits> graph;
+
 #endif
