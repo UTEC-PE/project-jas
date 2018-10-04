@@ -1,3 +1,4 @@
+<<<<<<< ours
 <<<<<<< HEAD
 #include <iostream>
 #include <vector>
@@ -40,6 +41,8 @@ public:
 
 };
 =======
+=======
+>>>>>>> theirs
 #ifndef NODE_HPP
 #define NODE_HPP
 
@@ -58,4 +61,7 @@ public:
 };
 
 #endif
+<<<<<<< ours
 >>>>>>> 0033e74d202639283ff9fd1b825941e2cc59271b
+=======
+>>>>>>> theirs
