@@ -79,8 +79,6 @@ public:
                 {
                     if ( (*it)->nodes[1] == nodeToDelete ) 
                     {
-                        std::cout << "About to delete edge: " << (*it)->nodes[0]->getData() << "-" << (*it)->nodes[1]->getData() << std::endl;
-                        std::cout << "Its weight is: " << (*it)->weight << std::endl;
                         edgeWeight -= (*it)->weight;
                         it = (*nodeEdges).erase(it);
                     }
