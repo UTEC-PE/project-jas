@@ -13,18 +13,21 @@ public:
 	// This is the Adjacency List
 	EdgeSeq edges;
 
+	int outDegree;
+
 private:
 	N data;
 	double x;
 	double y;
 	
 public:
-	Node(N newData): data(newData) {};
+	Node(N newData): data(newData), outDegree(0) {};
 
-	void addEdge(node* begin, node* end)
+	void addEdge(node* begin, node* end, int weight)
 	{
-		edge* newEdge = new edge(begin, end);
+		edge* newEdge = new edge(begin, end, weight);
 		edges.push_back(newEdge);
+		outDegree++;
 	}
 
 	N getData() { return data; }

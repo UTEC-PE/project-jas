@@ -14,15 +14,18 @@ main(int argc, char const *argv[])
     cout << "Printing nodes..." << endl;
     myGraph->printNodes();
 
-    myGraph->addEdge('A','E');
-    myGraph->addEdge('A','B');
-    myGraph->addEdge('A','C');
-    myGraph->addEdge('B','C');
-    myGraph->addEdge('D','A');
-    myGraph->addEdge('C','B');
+    myGraph->addEdge('A','E',2);
+    myGraph->addEdge('A','B',3);
+    myGraph->addEdge('A','C',2);
+    myGraph->addEdge('B','C',0);
+    myGraph->addEdge('D','A',3);
+    myGraph->addEdge('C','B',5);
 
     cout << "Printing adjacency list" << endl;
     myGraph->printAdjacencyList();
+
+    cout << "Node count: " << myGraph->getNodeCount() << endl;
+    cout << "Edge weight: " << myGraph->getedgeWeight() << endl;
 
     return 0;
 }
