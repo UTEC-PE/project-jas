@@ -23,7 +23,7 @@ private:
 public:
 	Node(N newData): data(newData), outDegree(0) {};
 
-	void addEdge(node* begin, node* end, int weight)
+	void addEdge(node* begin, node* end, E weight)
 	{
 		edge* newEdge = new edge(begin, end, weight);
 		edges.push_back(newEdge);

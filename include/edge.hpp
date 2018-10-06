@@ -12,11 +12,11 @@ public:
 private:
 	E data;
 	bool dir;
-	int weight;
+	E weight;
 	
 public:
 	node* nodes[2];
-	Edge(node* begin, node* end, int w)
+	Edge(node* begin, node* end, E w)
 	{
 		nodes[0] = begin;
 		nodes[1] = end;

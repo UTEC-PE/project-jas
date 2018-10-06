@@ -38,14 +38,14 @@ private:
 	NodeIte ni;
 	EdgeIte ei;
     int nodeCount;
-    int edgeWeight;
+    E edgeWeight;
 	
 public:
     Graph(): nodeCount(0) {};
     Graph(N data): nodeCount(0), edgeWeight(0) { addNode(data); };
 
     int getNodeCount() { return nodeCount; }
-    int getedgeWeight() { return edgeWeight; }
+    E getedgeWeight() { return edgeWeight; }
 
     void addNode(N data)
     {
@@ -63,7 +63,7 @@ public:
         }   
     }
 
-    void addEdge(node* begin, node* end, int weight)
+    void addEdge(node* begin, node* end, E weight)
     {
         begin->addEdge(begin,end, weight);
         edgeWeight += weight;
@@ -74,7 +74,7 @@ public:
         addEdge(begin, end, 0);
     }
 
-    void addEdge(N begin, N end, int weight)
+    void addEdge(N begin, N end, E weight)
     {
         addEdge( findNodeByData(begin), findNodeByData(end), weight );
     }
