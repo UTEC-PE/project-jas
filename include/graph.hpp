@@ -24,8 +24,8 @@ public:
     // Vector of nodes
 	typedef std::vector<node*> NodeSeq;
 
-    /* A helper typedef for the core function.
-    This is NOT the Adjacency List. Each Node as one instead. */
+    /* A helper typedef for the core functions.
+    This is NOT the Adjacency List. It is inherited by the nodes. */
 	typedef std::list<edge*> EdgeSeq;
     
 	typedef typename Tr::N N;
@@ -37,14 +37,60 @@ private:
 	NodeSeq nodes;
 	NodeIte ni;
 	EdgeIte ei;
+    int nodeCount;
 	
 public:
-    Graph() {};
-    Graph(N data) { addNode(data); };
+    Graph(): nodeCount(0) {};
+    Graph(N data): nodeCount(0) { addNode(data); };
 
     void addNode(N data)
     {
         node* newNode = new node(data);
+        nodes.push_back(newNode);
+        nodeCount++;
+    }
+
+    // TODO: Implement this with NodeIte
+    node* findNodeByData(N data)
+    {
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            if (nodes[i]->getData() == data) return nodes[i];
+        }   
+    }
+
+    void addEdge(node* begin, node* end)
+    {
+        begin->addEdge(begin,end);
+    }
+
+    void addEdge(N begin, N end)
+    {
+        addEdge( findNodeByData(begin), findNodeByData(end) );
+    }
+
+    void printNodes()
+    {
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            std::cout << nodes[i]->getData() << " ";
+        }  
+        std::cout << std::endl;
+    }
+
+    void printAdjacencyList()
+    {
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            std::cout << nodes[i]->getData() << " -> ";
+            EdgeSeq* nodeEdges = &(nodes[i]->edges);
+            
+            for(auto it : *nodeEdges)
+            {
+                std::cout << (*it).nodes[1]->getData() << " ";
+            }
+            std::cout << std::endl;
+        }   
     }
 
 };

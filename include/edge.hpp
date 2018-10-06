@@ -15,6 +15,12 @@ private:
 	
 public:
 	node* nodes[2];
+	Edge(node* begin, node* end)
+	{
+		nodes[0] = begin;
+		nodes[1] = end;
+	};
+	
 };
 
 #endif
