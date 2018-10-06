@@ -45,7 +45,7 @@ public:
     Graph(N data): nodeCount(0), edgeWeight(0) { addNode(data); };
 
     int getNodeCount() { return nodeCount; }
-    E getedgeWeight() { return edgeWeight; }
+    E getEdgeWeight() { return edgeWeight; }
 
     void addNode(N data)
     {
@@ -62,6 +62,46 @@ public:
             if (nodes[i]->getData() == data) return nodes[i];
         }   
     }
+
+    void deleteNode(node* nodeToDelete)
+    {
+        int indexOfNodeToDelete = 0;
+
+        // Deletes all edges like [* - nodeToDelete]
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            if (nodes[i] == nodeToDelete) indexOfNodeToDelete = i;
+            else
+            {
+                EdgeSeq* nodeEdges = &(nodes[i]->edges);
+            
+                for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end();)
+                {
+                    if ( (*it)->nodes[1] == nodeToDelete ) 
+                    {
+                        std::cout << "About to delete edge: " << (*it)->nodes[0]->getData() << "-" << (*it)->nodes[1]->getData() << std::endl;
+                        std::cout << "Its weight is: " << (*it)->weight << std::endl;
+                        edgeWeight -= (*it)->weight;
+                        it = (*nodeEdges).erase(it);
+                    }
+                    else ++it;
+                }
+            }
+        }
+
+        // Deletes all edges like [nodeToDelete - *]
+        EdgeSeq* edgesOfNodeToDelete = &(nodeToDelete->edges);
+        for(auto it = (*edgesOfNodeToDelete).begin(); it != (*edgesOfNodeToDelete).end(); ++it)
+        {
+            edgeWeight -= (*it)->weight;
+        }
+
+        nodes.erase(nodes.begin() + indexOfNodeToDelete);
+        delete nodeToDelete;
+        nodeCount--;
+    }
+
+    void deleteNode(N nodeToDelete) { deleteNode(findNodeByData(nodeToDelete)); }
 
     void addEdge(node* begin, node* end, E weight)
     {

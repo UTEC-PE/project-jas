@@ -12,16 +12,21 @@ public:
 private:
 	E data;
 	bool dir;
-	E weight;
 	
 public:
 	node* nodes[2];
+	E weight;
+
 	Edge(node* begin, node* end, E w)
 	{
 		nodes[0] = begin;
 		nodes[1] = end;
 		weight = w;
 	};
+
+
+
+	~Edge() {};
 	
 };
 

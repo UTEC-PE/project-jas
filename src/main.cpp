@@ -25,7 +25,21 @@ main(int argc, char const *argv[])
     myGraph->printAdjacencyList();
 
     cout << "Node count: " << myGraph->getNodeCount() << endl;
-    cout << "Edge weight: " << myGraph->getedgeWeight() << endl;
+    cout << "Edge weight: " << myGraph->getEdgeWeight() << endl;
+
+    cout << endl << "Deleting node C..." << endl << endl;
+    myGraph ->deleteNode('C');
+
+    cout << "Printing nodes..." << endl;
+    myGraph->printNodes();
+
+    cout << "Node count: " << myGraph->getNodeCount() << endl;
+
+    cout << "Printing adjacency list" << endl;
+    myGraph->printAdjacencyList();
+
+    cout << "Node count: " << myGraph->getNodeCount() << endl;
+    cout << "Edge weight: " << myGraph->getEdgeWeight() << endl;
 
     return 0;
 }

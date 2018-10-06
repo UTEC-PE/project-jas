@@ -31,6 +31,8 @@ public:
 	}
 
 	N getData() { return data; }
+
+	~Node() {};
 };
 
 #endif
