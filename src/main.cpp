@@ -1,5 +1,5 @@
 #include <iostream>
-#include "graph.hpp"
+#include "../include/graph.hpp"
 using namespace std;
 
 main(int argc, char const *argv[])

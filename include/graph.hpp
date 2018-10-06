@@ -13,10 +13,6 @@ struct Traits {
 
 template <typename Tr>
 class Graph {
-	NodeSeq nodes;
-	NodeIte ni;
-	EdgeIte ei;
-	
 public:
 	typedef Graph<Tr> self;
 
@@ -36,6 +32,14 @@ public:
 	typedef typename Tr::E E;
 	typedef typename NodeSeq::iterator NodeIte;
 	typedef typename EdgeSeq::iterator EdgeIte;
+
+private:
+	NodeSeq nodes;
+	NodeIte ni;
+	EdgeIte ei;
+	
+public:
+
 };
 
 typedef Graph<Traits> graph;
