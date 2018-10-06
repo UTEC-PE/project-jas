@@ -16,6 +16,7 @@ private:
 	double y;
 	
 public:
+	Node(N newData): data(newData) {};
 
 };
 

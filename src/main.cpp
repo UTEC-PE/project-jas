@@ -4,7 +4,8 @@ using namespace std;
 
 main(int argc, char const *argv[])
 {
-    /* code */
+    graph* myGraph = new graph;
+    myGraph->addNode('A');
     return 0;
 }
 

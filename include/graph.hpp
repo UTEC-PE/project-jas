@@ -39,8 +39,20 @@ private:
 	EdgeIte ei;
 	
 public:
+    Graph() {};
+    Graph(N data) { addNode(data); };
+
+    void addNode(N data)
+    {
+        node* newNode = new node(data);
+    }
 
 };
 
+/* 
+    Now Graph<Traits> is defined as graph. 
+    Hence, the correct instantiation of a Graph would be:
+        graph* myGraph = new graph;
+*/
 typedef Graph<Traits> graph;
 #endif
