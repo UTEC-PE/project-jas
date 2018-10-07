@@ -4,4 +4,18 @@
   - Jhony Angulo
   - Sergio Carbone
 
-
+* Formato del archivo de entrada
+  - La primera línea contiene 3 números. El primer número indica el número de nodos y el segundo indica el número de aristas y el último si se trata de un grafo dirigido
+  - La segunda linea contiene los nodos separados por un espacion
+  - Las siguientes lineas son las aristas(si es el grafo es dirigido el orden importa), donde se indica los 2 nodos conectados con el peso de la arista.
+** Ejemplo
+   #+BEGIN_SRC text
+	 5 6 1
+	 A B C D E
+	 A E 2
+	 A B 3
+	 A C 2
+	 B C 0
+	 D A 3
+	 C B 5
+   #+END_SRC
