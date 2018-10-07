@@ -46,7 +46,7 @@ public:
 
     int getNodeCount() { return nodeCount; }
     E getEdgeWeight() { return edgeWeight; }
-
+	
     void addNode(N data)
     {
         node* newNode = new node(data);
@@ -57,10 +57,10 @@ public:
     // TODO: Implement this with NodeIte
     node* findNodeByData(N data)
     {
-        for(size_t i = 0; i < nodeCount; i++)
-        {
-            if (nodes[i]->getData() == data) return nodes[i];
-        }   
+		for(ni = nodes.begin(); ni!=nodes.end(); ++ni){
+			if((*ni)->getData() == data) break;
+		}
+		return (*ni);
     }
 
     void deleteNode(node* nodeToDelete)
