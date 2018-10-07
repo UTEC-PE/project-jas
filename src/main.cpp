@@ -1,25 +1,44 @@
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 #include "graph.hpp"
 using namespace std;
 
 int main()
 {
     graph* myGraph = new graph;
-    myGraph->addNode('A');
-    myGraph->addNode('B');
-    myGraph->addNode('C');
-    myGraph->addNode('D');
-    myGraph->addNode('E');
 
+	//Lectura del archivo
+	ifstream input ("grafo.txt");
+	string line;
+	getline(input, line);
+	stringstream ss(line);
+	int nodes,edges;
+	bool direction;
+	ss>>nodes>>edges>>direction;
+	getline(input, line);
+	ss.str(line);
+	ss.clear();
+	for(int i = 0; i<nodes ;i++ ){
+		char value;
+		ss>>value;
+		myGraph->addNode(value);
+	}
+	for(int i=0;i<edges;i++){
+		char b,e;
+		int w;
+		getline(input, line);
+		ss.str(line);
+		ss.clear();
+		ss>>b>>e>>w;
+		myGraph->addEdge(b,e,w);
+	}
+	//Fin lectura de archivo
+	
     cout << "Printing nodes..." << endl;
     myGraph->printNodes();
 
-    myGraph->addEdge('A','E',2);
-    myGraph->addEdge('A','B',3);
-    myGraph->addEdge('A','C',2);
-    myGraph->addEdge('B','C',0);
-    myGraph->addEdge('D','A',3);
-    myGraph->addEdge('C','B',5);
 
     cout << "Printing adjacency list" << endl;
     myGraph->printAdjacencyList();
