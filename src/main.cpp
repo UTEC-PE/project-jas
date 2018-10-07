@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-    graph* myGraph = new graph;
+    graph* myGraph;
 
 	//Lectura del archivo
 	ifstream input ("grafo.txt");
@@ -17,6 +17,7 @@ int main()
 	int nodes,edges;
 	bool direction;
 	ss>>nodes>>edges>>direction;
+	myGraph = new graph(direction);
 	getline(input, line);
 	ss.str(line);
 	ss.clear();

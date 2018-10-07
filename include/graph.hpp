@@ -39,10 +39,12 @@ private:
 	EdgeIte ei;
     int nodeCount;
     E edgeWeight;
-	
+	bool directed;
 public:
-    Graph(): nodeCount(0) {};
-    Graph(N data): nodeCount(0), edgeWeight(0) { addNode(data); };
+    Graph(bool directed=false): nodeCount(0), directed(directed){};
+    Graph(N data, bool directed=false)
+		: nodeCount(0), edgeWeight(0), directed(directed)
+	{ addNode(data); };
 
     int getNodeCount() { return nodeCount; }
     E getEdgeWeight() { return edgeWeight; }
@@ -53,8 +55,8 @@ public:
         nodes.push_back(newNode);
         nodeCount++;
     }
+	bool isDirected(){ return directed;}
 
-    // TODO: Implement this with NodeIte
     node* findNodeByData(N data)
     {
 		for(ni = nodes.begin(); ni!=nodes.end(); ++ni){
