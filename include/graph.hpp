@@ -148,6 +148,11 @@ public:
         }   
     }
 
+    self prim()
+    {
+        // TODO
+    }
+
 };
 
 /* 
