@@ -1,8 +1,8 @@
 #include <iostream>
-#include "../include/graph.hpp"
+#include "graph.hpp"
 using namespace std;
 
-main(int argc, char const *argv[])
+int main()
 {
     graph* myGraph = new graph;
     myGraph->addNode('A');
