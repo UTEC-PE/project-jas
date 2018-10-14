@@ -15,6 +15,8 @@ public:
 	node* nodes[2];
 	E weight;
 
+	Edge() {};
+
 	Edge(node* begin, node* end, E w)
 	{
 		nodes[0] = begin;

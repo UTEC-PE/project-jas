@@ -41,10 +41,11 @@ private:
     E edgeWeight;
 	bool directed;
 public:
+    Graph(): directed(false), nodeCount(0) {};
+
     Graph(bool directed=false): nodeCount(0), directed(directed){};
-    Graph(N data, bool directed=false)
-		: nodeCount(0), edgeWeight(0), directed(directed)
-	{ addNode(data); };
+
+    Graph(N data, bool directed=false): nodeCount(0), edgeWeight(0), directed(directed){ addNode(data); };
 
     int getNodeCount() { return nodeCount; }
     E getEdgeWeight() { return edgeWeight; }
@@ -57,12 +58,46 @@ public:
     }
 	bool isDirected(){ return directed;}
 
-    node* findNodeByData(N data)
+    node* findNode(N data)
     {
-		for(ni = nodes.begin(); ni!=nodes.end(); ++ni){
+		for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
+        {
 			if((*ni)->getData() == data) break;
 		}
+
 		return (*ni);
+    }
+
+    node* findNode(node n)
+    {
+        bool found = false;
+        for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
+        {
+			if((*ni)->getData() == n->getData())
+            {
+                found = true;
+                break;
+            }
+		}
+
+        if (!found) return nullptr;
+        else return (*ni);
+    }
+
+    node* findNode(node* n, NodeSeq where)
+    {
+        bool found = false;
+        for(ni = where.begin(); ni!=where.end(); ++ni)
+        {
+			if((*ni)->getData() == n->getData())
+            {
+                found = true;
+                break;
+            }
+		}
+
+        if (!found) return nullptr;
+        else return (*ni);
     }
 
     void deleteNode(node* nodeToDelete)
@@ -105,23 +140,24 @@ public:
 
     void addEdge(node* begin, node* end, E weight)
     {
-        begin->addEdge(begin,end, weight);
+        begin->addEdge(begin, end, weight);
         edgeWeight += weight;
+        if (!directed) end->addEdge(end, begin, weight);
     }
 
     void addEdge(node* begin, node* end)
     {
-        addEdge(begin, end, 0);
+        addEdge(begin, end, 1);
     }
 
     void addEdge(N begin, N end, E weight)
     {
-        addEdge( findNodeByData(begin), findNodeByData(end), weight );
+        addEdge( findNode(begin), findNode(end), weight );
     }
 
     void addEdge(N begin, N end)
     {
-        addEdge(begin, end, 0);
+        addEdge(begin, end, 1);
     }
 
     void printNodes()
@@ -150,7 +186,39 @@ public:
 
     self prim()
     {
-        // TODO
+        Graph *primMST = new Graph(false);
+
+        primMST->addNode(nodes[0]->getData());
+
+        NodeSeq &visited = (primMST->nodes);
+
+        while(visited.size() != nodeCount)
+        {
+            int minWeight = __INT_MAX__;
+            edge *edgeToAdd = new edge();
+            for(int i = 0; i < primMST->nodeCount; i++)
+            {
+                EdgeSeq* nodeEdges = &((findNode(visited[i]->getData())->edges));
+            
+                for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end(); ++it)
+                {
+                    edge* &currentEdge = *it;
+                    if ( currentEdge->weight < minWeight ) 
+                    {
+                        bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
+                        if ( isNotInVisited )
+                        {
+                            minWeight = currentEdge->weight;
+                            edgeToAdd = currentEdge;
+                        }
+                    }
+                }
+            }
+            primMST->addNode(edgeToAdd->nodes[1]->getData());
+            primMST->addEdge(edgeToAdd->nodes[0]->getData(), edgeToAdd->nodes[1]->getData(), edgeToAdd->weight);
+        }
+
+        return *primMST;
     }
 
 };

@@ -7,59 +7,37 @@ using namespace std;
 
 int main()
 {
-    graph* myGraph;
+    graph* myGraph = new graph(false);
 
-	//Lectura del archivo
-	ifstream input ("grafo.txt");
-	string line;
-	getline(input, line);
-	stringstream ss(line);
-	int nodes,edges;
-	bool direction;
-	ss>>nodes>>edges>>direction;
-	myGraph = new graph(direction);
-	getline(input, line);
-	ss.str(line);
-	ss.clear();
-	for(int i = 0; i<nodes ;i++ ){
-		char value;
-		ss>>value;
-		myGraph->addNode(value);
-	}
-	for(int i=0;i<edges;i++){
-		char b,e;
-		int w;
-		getline(input, line);
-		ss.str(line);
-		ss.clear();
-		ss>>b>>e>>w;
-		myGraph->addEdge(b,e,w);
-	}
-	//Fin lectura de archivo
-	
-    cout << "Printing nodes..." << endl;
-    myGraph->printNodes();
+    myGraph->addNode('A');
+    myGraph->addNode('B');
+    myGraph->addNode('C');
+    myGraph->addNode('D');
+    myGraph->addNode('E');
+    myGraph->addNode('F');
+    myGraph->addNode('G');
+
+    myGraph->addEdge('A', 'B', 2);
+    myGraph->addEdge('A', 'D', 3);
+    myGraph->addEdge('A', 'C', 3);
+    myGraph->addEdge('B', 'E', 3);
+    myGraph->addEdge('B', 'C', 4);
+    myGraph->addEdge('C', 'D', 5);
+    myGraph->addEdge('C', 'F', 6);
+    myGraph->addEdge('C', 'E', 1);
+    myGraph->addEdge('D', 'F', 7);
+    myGraph->addEdge('E', 'F', 8);
+    myGraph->addEdge('F', 'G', 9);
 
 
-    cout << "Printing adjacency list" << endl;
     myGraph->printAdjacencyList();
 
-    cout << "Node count: " << myGraph->getNodeCount() << endl;
-    cout << "Edge weight: " << myGraph->getEdgeWeight() << endl;
+    graph myGraphMST = myGraph->prim();
 
-    cout << endl << "Deleting node C..." << endl << endl;
-    myGraph ->deleteNode('C');
+    cout << endl << endl;
 
-    cout << "Printing nodes..." << endl;
-    myGraph->printNodes();
+    myGraphMST.printAdjacencyList();
 
-    cout << "Node count: " << myGraph->getNodeCount() << endl;
-
-    cout << "Printing adjacency list" << endl;
-    myGraph->printAdjacencyList();
-
-    cout << "Node count: " << myGraph->getNodeCount() << endl;
-    cout << "Edge weight: " << myGraph->getEdgeWeight() << endl;
 
     return 0;
 }
