@@ -186,7 +186,9 @@ public:
 
     self prim()
     {
-        Graph *primMST = new Graph(false);
+        if (!directed)
+        {
+            Graph *primMST = new Graph(false);
 
         primMST->addNode(nodes[0]->getData());
 
@@ -219,7 +221,8 @@ public:
         }
 
         return *primMST;
-    }
+        } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
+    } 
 
 };
 
