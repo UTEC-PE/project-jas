@@ -24,8 +24,6 @@ public:
 		weight = w;
 	};
 
-
-
 	~Edge() {};
 	
 };

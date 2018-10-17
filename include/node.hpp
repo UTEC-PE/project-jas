@@ -15,13 +15,15 @@ public:
 
 private:
 	N data;
-	int inDegree; // TODO
-	int outDegree;// TODO
 	double x;
 	double y;
 	
 public:
-	Node(N newData): data(newData) {};
+	Node(N newData): data(newData), inDegree(0), outDegree(0) {};
+
+	int inDegree;
+	int outDegree;	// If the graph is not directed, only outDegree will be used
+	int &degree = outDegree;
 
 	void addEdge(node* begin, node* end, E weight)
 	{

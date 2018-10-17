@@ -146,8 +146,14 @@ public:
     {
         begin->addEdge(begin, end, weight);
         edgeWeight += weight;
-        edgeCount ++;
-        if (!directed) end->addEdge(end, begin, weight);
+        edgeCount++;
+        begin->outDegree++;
+        if (!directed)
+        {
+            end->addEdge(end, begin, weight);
+            end->outDegree++;
+        }
+        else end->inDegree++;
     }
 
     void addEdge(node* begin, node* end)

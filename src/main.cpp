@@ -32,7 +32,6 @@ int main()
 
     myGraph->printAdjacencyList();
 
-    delete myGraph;
 
     return 0;
 }
