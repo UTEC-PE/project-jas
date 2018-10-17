@@ -32,6 +32,8 @@ int main()
 
     myGraph->printAdjacencyList();
 
+    cout << endl << endl;
+
     myGraph->kruskal();
 
     return 0;

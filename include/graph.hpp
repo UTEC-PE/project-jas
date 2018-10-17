@@ -277,19 +277,35 @@ public:
     void kruskal()
     {
         EdgeSeq es = nodes[2]->edges;
-
-        std::cout << std::endl << std::endl;
         
-        for(auto i = es.begin(); i != es.end(); ++i)
+        Graph* kruskalMST = new Graph(false);
+
+        EdgeSeq allEdges;
+
+        NodeSeq &visited = kruskalMST->nodes;
+        
+        for(size_t i = 0; i < nodeCount; i++)
         {
-            std::cout << (*i)->nodes[0]->getData() << " -" << (*i)->weight << "- " << (*i)->nodes[1]->getData() << std::endl;
+            EdgeSeq &currentNodeEdges = nodes[i]->edges;
+            allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
         }
+
+        allEdges.sort(edgeCmp());
         
-        es.sort(edgeCmp());
+        
+        /* for(auto it = allEdges.begin(); it != allEdges.end(); ++it)
+        {
+            edge* &leastEdge = *it;
+            
+            
+        }
+
+        kruskalMST->printAdjacencyList(); */
+        
 
         std::cout << std::endl << std::endl;
 
-        for(auto i = es.begin(); i != es.end(); ++i)
+        for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
         {
             std::cout << (*i)->nodes[0]->getData() << " -" << (*i)->weight << "- " << (*i)->nodes[1]->getData() << std::endl;
         }
