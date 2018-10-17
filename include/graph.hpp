@@ -5,6 +5,7 @@
 #include <list>
 #include "node.hpp"
 #include "edge.hpp"
+#include <algorithm>
 
 struct Traits {
 	typedef char N;
@@ -257,9 +258,42 @@ public:
         } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
     } 
 
-    self kruskal()
+    struct comparateEdges
     {
-        // TODO
+        inline bool operator() (const edge* &edgeA, const edge* &edgeB)
+        {
+            return (edgeA->weight < edgeB->weight);
+        }
+    };
+
+    struct edgeCmp
+    {
+        bool operator()(const edge* a, const edge* b)
+        {
+            return (a->weight < b->weight);
+        }
+    };
+
+    void kruskal()
+    {
+        EdgeSeq es = nodes[2]->edges;
+
+        std::cout << std::endl << std::endl;
+        
+        for(auto i = es.begin(); i != es.end(); ++i)
+        {
+            std::cout << (*i)->nodes[0]->getData() << " -" << (*i)->weight << "- " << (*i)->nodes[1]->getData() << std::endl;
+        }
+        
+        es.sort(edgeCmp());
+
+        std::cout << std::endl << std::endl;
+
+        for(auto i = es.begin(); i != es.end(); ++i)
+        {
+            std::cout << (*i)->nodes[0]->getData() << " -" << (*i)->weight << "- " << (*i)->nodes[1]->getData() << std::endl;
+        }
+
     }
 
 };

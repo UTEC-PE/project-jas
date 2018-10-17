@@ -32,14 +32,7 @@ int main()
 
     myGraph->printAdjacencyList();
 
-    cout << endl << endl;
-    myGraph->deleteEdge('A','B');
-
-    myGraph->printAdjacencyList();
-
-    cout << "Density: " << myGraph->calculateDensity() << endl;
-    cout << "Parameter of density: " << myGraph->getParameterOfDensity() << endl;
-    cout << "Is dense: " << myGraph->isDense() << endl;
+    myGraph->kruskal();
 
     return 0;
 }
