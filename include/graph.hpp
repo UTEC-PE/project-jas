@@ -257,6 +257,15 @@ public:
         } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
     } 
 
+    ~Graph()
+    {
+        while(!nodes.empty())
+        {
+            delete nodes.back();
+            nodes.pop_back();
+        }
+    }
+
 };
 
 /* 
