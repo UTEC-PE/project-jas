@@ -32,12 +32,14 @@ int main()
 
     myGraph->printAdjacencyList();
 
-    graph myGraphMST = myGraph->prim();
-
     cout << endl << endl;
+    myGraph->deleteEdge('A','B');
 
-    myGraphMST.printAdjacencyList();
+    myGraph->printAdjacencyList();
 
+    cout << "Density: " << myGraph->calculateDensity() << endl;
+    cout << "Parameter of density: " << myGraph->getParameterOfDensity() << endl;
+    cout << "Is dense: " << myGraph->isDense() << endl;
 
     return 0;
 }

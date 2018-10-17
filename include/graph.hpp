@@ -37,9 +37,8 @@ private:
 	NodeSeq nodes;
 	NodeIte ni;
 	EdgeIte ei;
-    int nodeCount;
-    E edgeWeight;
 	bool directed;
+    double parameterOfDensity = 0.8;
 public:
     Graph(): directed(false), nodeCount(0) {};
 
@@ -47,8 +46,13 @@ public:
 
     Graph(N data, bool directed=false): nodeCount(0), edgeWeight(0), directed(directed){ addNode(data); };
 
+    int nodeCount;
+    int edgeCount;
+    E edgeWeight;
+
     int getNodeCount() { return nodeCount; }
     E getEdgeWeight() { return edgeWeight; }
+    double getParameterOfDensity() { return parameterOfDensity; }
 	
     void addNode(N data)
     {
@@ -142,6 +146,7 @@ public:
     {
         begin->addEdge(begin, end, weight);
         edgeWeight += weight;
+        edgeCount ++;
         if (!directed) end->addEdge(end, begin, weight);
     }
 
@@ -158,6 +163,33 @@ public:
     void addEdge(N begin, N end)
     {
         addEdge(begin, end, 1);
+    }
+
+    void deleteEdge(node* begin, node* end)
+    {
+        int weightLost = begin->deleteEdge(begin, end);
+        
+        edgeCount--;
+        edgeWeight -= weightLost;
+
+        if(!directed) end->deleteEdge(end, begin);
+    }
+
+    void deleteEdge(N begin, N end)
+    {
+        deleteEdge(findNode(begin), findNode(end));
+    }
+
+    double calculateDensity()
+    {
+        if (directed) return (double) edgeCount/(nodeCount*(nodeCount-1));
+        return 2*((double) edgeCount/(nodeCount*(nodeCount-1)));
+    }
+
+    bool isDense()
+    {
+        if (calculateDensity() >= parameterOfDensity) return true;
+        return false;
     }
 
     void printNodes()
@@ -207,6 +239,7 @@ public:
                     edge* &currentEdge = *it;
                     if ( currentEdge->weight < minWeight ) 
                     {
+                        // TODO: Change this and use visited.find()
                         bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
                         if ( isNotInVisited )
                         {
