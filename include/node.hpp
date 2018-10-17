@@ -45,7 +45,11 @@ public:
 	N getData() { return data; }
 
 	~Node() {
-		// TODO
+		while(!edges.empty())
+		{
+			delete edges.front();
+			edges.pop_front();
+		}
 	};
 };
 

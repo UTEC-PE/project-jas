@@ -26,9 +26,7 @@ public:
 
 
 
-	~Edge() {
-		//TODOs
-	};
+	~Edge() {};
 	
 };
 

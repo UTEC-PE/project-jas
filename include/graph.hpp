@@ -259,7 +259,11 @@ public:
 
     ~Graph()
     {
-        // TODO
+        while(!nodes.empty())
+        {
+            delete nodes.back();
+            nodes.pop_back();
+        }
     }
 
 };
