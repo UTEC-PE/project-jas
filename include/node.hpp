@@ -15,6 +15,8 @@ public:
 
 private:
 	N data;
+	int inDegree; // TODO
+	int outDegree;// TODO
 	double x;
 	double y;
 	
