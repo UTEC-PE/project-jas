@@ -44,7 +44,9 @@ public:
 
 	N getData() { return data; }
 
-	~Node() {};
+	~Node() {
+		// TODO
+	};
 };
 
 #endif
