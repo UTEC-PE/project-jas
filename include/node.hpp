@@ -40,6 +40,7 @@ public:
 				return weightLost;
 			}
 		}
+		return 0;
 	}
 
 	N getData() { return data; }
