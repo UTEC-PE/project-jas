@@ -263,6 +263,7 @@ public:
         } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
     } 
 
+
     ~Graph()
     {
         while(!nodes.empty())
@@ -271,6 +272,45 @@ public:
             nodes.pop_back();
         }
     }
+    
+    void DeepFirstSearch(N data)
+    {
+        NodeSeq visitedNodes,test;
+        test= DeepFirstSearch( findNode(data), visitedNodes);
+
+       for (int i = 0; i < test.size(); ++i)
+       {
+          std::cout<<test[i]->getData()<<std::endl;;
+       }
+    }
+
+    NodeSeq DeepFirstSearch(node* origen, NodeSeq visitedNodes){
+      visitedNodes.push_back(origen);
+            
+            EdgeSeq* nodeEdges = &(origen->edges);
+            for(auto it : *nodeEdges)
+            {   
+                if (!visitedDFS((*it).nodes[1], visitedNodes ))
+                {
+                    visitedNodes= DeepFirstSearch((*it).nodes[1], visitedNodes);
+                }
+
+            }
+    return visitedNodes;        
+    }
+
+    bool visitedDFS(node* node , NodeSeq visitedNodes){
+        for (int i = 0; i < visitedNodes.size(); ++i)
+        {
+            if (node == visitedNodes[i])
+            {
+
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 };
 

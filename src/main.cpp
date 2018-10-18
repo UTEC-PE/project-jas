@@ -32,6 +32,8 @@ int main()
 
     myGraph->printAdjacencyList();
 
+    myGraph->DeepFirstSearch('A');
+
 
     return 0;
 }
