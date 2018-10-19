@@ -5,6 +5,8 @@
 #include <list>
 #include "node.hpp"
 #include "edge.hpp"
+#include <algorithm>
+#include <map>
 
 struct Traits {
 	typedef char N;
@@ -39,6 +41,9 @@ private:
 	EdgeIte ei;
 	bool directed;
     double parameterOfDensity = 0.8;
+
+    std::map<N,int> disjointSetPlaces;
+
 public:
     Graph(): directed(false), nodeCount(0) {};
 
@@ -56,14 +61,18 @@ public:
 	
     void addNode(N data)
     {
-        node* newNode = new node(data);
-        nodes.push_back(newNode);
-        nodeCount++;
+        if (findNode(data) == nullptr)
+        {
+            node* newNode = new node(data);
+            nodes.push_back(newNode);
+            nodeCount++;
+        }
     }
 	bool isDirected(){ return directed;}
 
     node* findNode(N data)
     {
+        if (nodeCount == 0) return nullptr;
 		for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
         {
 			if((*ni)->getData() == data) break;
@@ -74,6 +83,7 @@ public:
 
     node* findNode(node n)
     {
+        if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
         {
@@ -90,6 +100,7 @@ public:
 
     node* findNode(node* n, NodeSeq where)
     {
+        if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = where.begin(); ni!=where.end(); ++ni)
         {
@@ -140,7 +151,7 @@ public:
         nodeCount--;
     }
 
-    void deleteNode(N nodeToDelete) { deleteNode(findNodeByData(nodeToDelete)); }
+    void deleteNode(N nodeToDelete) { deleteNode(findNode(nodeToDelete)); }
 
     void addEdge(node* begin, node* end, E weight)
     {
@@ -245,7 +256,6 @@ public:
                     edge* &currentEdge = *it;
                     if ( currentEdge->weight < minWeight ) 
                     {
-                        // TODO: Change this and use visited.find()
                         bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
                         if ( isNotInVisited )
                         {
@@ -346,6 +356,68 @@ public:
            return visitedNodes =BreadthFirstSearch(origen, visitedNodes, queue);
            
         }
+    }
+
+    struct edgeCmp
+    {
+        bool operator()(const edge* a, const edge* b)
+        {
+            return (a->weight < b->weight);
+        }
+    };
+
+    bool createsCycle(edge* newEdge, int* disjointSet)
+    {
+        int nodeBeginParent = disjointSetPlaces[newEdge->nodes[0]->getData()];
+        int nodeEndParent = disjointSetPlaces[newEdge->nodes[1]->getData()];
+        
+        while (disjointSet[nodeBeginParent] >= 0) nodeBeginParent = disjointSet[nodeBeginParent];
+        
+        while (disjointSet[nodeEndParent] >= 0) nodeEndParent = disjointSet[nodeEndParent];
+
+        if (nodeBeginParent == nodeEndParent) return true;
+        else
+        {
+            disjointSet[nodeEndParent] = nodeBeginParent;
+            return false;
+        } 
+    }
+
+    self kruskal()
+    {
+        Graph* kruskalMST = new Graph(false);
+        EdgeSeq allEdges;
+        int disjointSet[nodeCount] = {};
+
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            disjointSet[i] = -1;
+            disjointSetPlaces[nodes[i]->getData()] = i;
+        }
+
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            EdgeSeq &currentNodeEdges = nodes[i]->edges;
+            allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
+        }
+
+        allEdges.sort(edgeCmp());
+
+        for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
+        {
+            if (!createsCycle(*i, disjointSet))
+            {
+                kruskalMST->addNode((*i)->nodes[0]->getData());
+                kruskalMST->addNode((*i)->nodes[1]->getData());
+
+                kruskalMST->addEdge(
+                    (*i)->nodes[0]->getData(),
+                    (*i)->nodes[1]->getData()
+                );
+            }
+        }
+
+        return *kruskalMST;
     }
 
 };

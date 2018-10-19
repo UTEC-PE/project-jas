@@ -10,7 +10,16 @@ int main()
     graph myGraph = read.getGraph();
 
     myGraph.printAdjacencyList();
-    myGraph.prim().printAdjacencyList();
+
+    cout << endl;
+
+    graph pGraph = myGraph.prim();
+    pGraph.printAdjacencyList();
+
+    cout << endl;
+
+    graph kGraph = myGraph.kruskal();
+    kGraph.printAdjacencyList();
 
     return 0;
 }

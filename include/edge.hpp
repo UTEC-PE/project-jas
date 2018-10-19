@@ -24,6 +24,11 @@ public:
 		weight = w;
 	};
 
+	bool operator<(Edge b)
+	{
+	return weight < b.weight;
+	}
+
 	~Edge() {};
 	
 };
