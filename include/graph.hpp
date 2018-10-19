@@ -198,6 +198,25 @@ public:
         deleteEdge(findNode(begin), findNode(end));
     }
 
+    edge* findEdge(node* start, node* end)
+    {
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            EdgeSeq* nodeEdges = &(nodes[i]->edges);
+            
+            for(auto it : *nodeEdges)
+            {
+                if ((it)->nodes[0] == start && (it)->nodes[1] == end) return (it);
+            }
+        }
+        return nullptr;   
+    }
+
+    edge* findEdge(N start, N end)
+    {
+        findEdge(findNode(start), findNode(end));
+    }
+
     double calculateDensity()
     {
         if (directed) return (double) edgeCount/(nodeCount*(nodeCount-1));
