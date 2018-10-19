@@ -327,14 +327,6 @@ public:
     NodeSeq BreadthFirstSearch (node* origen, NodeSeq visitedNodes, NodeSeq queue)
     {
         origen = queue[0];
-        /*std::cout<<"origen: "<<origen->getData()<<std::endl;
-        std::cout<<"queue: "<<std::endl;
-        printNodeSeq(queue);
-        std::cout<<"visited: "<<std::endl;
-        printNodeSeq(visitedNodes);*/
-        
-
-
         visitedNodes.push_back(origen);
         EdgeSeq* nodeEdges = &(origen->edges);
 
