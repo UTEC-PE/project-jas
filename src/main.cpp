@@ -34,7 +34,9 @@ int main()
 
     cout << endl << endl;
 
-    myGraph->kruskal();
+    graph kruskalGraph = myGraph->kruskal();
+    cout << "kruskal mst: " << endl;
+    kruskalGraph.printAdjacencyList();
 
     return 0;
 }

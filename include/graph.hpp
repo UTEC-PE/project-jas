@@ -6,6 +6,7 @@
 #include "node.hpp"
 #include "edge.hpp"
 #include <algorithm>
+#include <map>
 
 struct Traits {
 	typedef char N;
@@ -40,6 +41,9 @@ private:
 	EdgeIte ei;
 	bool directed;
     double parameterOfDensity = 0.8;
+
+    std::map<N,int> disjointSetPlaces;
+
 public:
     Graph(): directed(false), nodeCount(0) {};
 
@@ -57,14 +61,18 @@ public:
 	
     void addNode(N data)
     {
-        node* newNode = new node(data);
-        nodes.push_back(newNode);
-        nodeCount++;
+        if (findNode(data) == nullptr)
+        {
+            node* newNode = new node(data);
+            nodes.push_back(newNode);
+            nodeCount++;
+        }
     }
 	bool isDirected(){ return directed;}
 
     node* findNode(N data)
     {
+        if (nodeCount == 0) return nullptr;
 		for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
         {
 			if((*ni)->getData() == data) break;
@@ -75,6 +83,7 @@ public:
 
     node* findNode(node n)
     {
+        if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
         {
@@ -91,6 +100,7 @@ public:
 
     node* findNode(node* n, NodeSeq where)
     {
+        if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = where.begin(); ni!=where.end(); ++ni)
         {
@@ -141,7 +151,7 @@ public:
         nodeCount--;
     }
 
-    void deleteNode(N nodeToDelete) { deleteNode(findNodeByData(nodeToDelete)); }
+    void deleteNode(N nodeToDelete) { deleteNode(findNode(nodeToDelete)); }
 
     void addEdge(node* begin, node* end, E weight)
     {
@@ -240,7 +250,6 @@ public:
                     edge* &currentEdge = *it;
                     if ( currentEdge->weight < minWeight ) 
                     {
-                        // TODO: Change this and use visited.find()
                         bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
                         if ( isNotInVisited )
                         {
@@ -258,14 +267,6 @@ public:
         } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
     } 
 
-    struct comparateEdges
-    {
-        inline bool operator() (const edge* &edgeA, const edge* &edgeB)
-        {
-            return (edgeA->weight < edgeB->weight);
-        }
-    };
-
     struct edgeCmp
     {
         bool operator()(const edge* a, const edge* b)
@@ -274,15 +275,34 @@ public:
         }
     };
 
-    void kruskal()
+    bool createsCycle(edge* &newEdge, int* disjointSet)
     {
-        EdgeSeq es = nodes[2]->edges;
+        int nodeBeginParent = disjointSetPlaces[newEdge->nodes[0]->getData()];
+        int nodeEndParent = disjointSetPlaces[newEdge->nodes[1]->getData()];
+
+        while (disjointSet[nodeBeginParent] >= 0) nodeBeginParent = disjointSet[nodeBeginParent];
         
+        while (disjointSet[nodeEndParent] >= 0) nodeEndParent = disjointSet[nodeEndParent];
+
+        if (nodeBeginParent == nodeEndParent) return true;
+        else
+        {
+            disjointSet[nodeEndParent] = nodeBeginParent;
+            return false;
+        }
+    }
+
+    self kruskal()
+    {
         Graph* kruskalMST = new Graph(false);
-
         EdgeSeq allEdges;
-
-        NodeSeq &visited = kruskalMST->nodes;
+        int disjointSet[nodeCount] = {};
+        
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            disjointSet[i] = -1;
+            disjointSetPlaces[nodes[i]->getData()] = i;
+        }
         
         for(size_t i = 0; i < nodeCount; i++)
         {
@@ -292,24 +312,21 @@ public:
 
         allEdges.sort(edgeCmp());
         
-        
-        /* for(auto it = allEdges.begin(); it != allEdges.end(); ++it)
-        {
-            edge* &leastEdge = *it;
-            
-            
-        }
-
-        kruskalMST->printAdjacencyList(); */
-        
-
-        std::cout << std::endl << std::endl;
-
         for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
         {
-            std::cout << (*i)->nodes[0]->getData() << " -" << (*i)->weight << "- " << (*i)->nodes[1]->getData() << std::endl;
+            if (!createsCycle(*i, disjointSet))
+            {
+                kruskalMST->addNode((*i)->nodes[0]->getData());
+                kruskalMST->addNode((*i)->nodes[1]->getData());
+
+                kruskalMST->addEdge(
+                    (*i)->nodes[0]->getData(),
+                    (*i)->nodes[1]->getData()
+                );
+            }
         }
 
+        return *kruskalMST;
     }
 
 };
