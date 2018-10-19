@@ -25,6 +25,8 @@ int main()
     cout << "is connected: " << myGraph.isFuertementeConexo() << endl;
 
 
+    cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;
+
     return 0;
 }
 
