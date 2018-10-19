@@ -33,6 +33,8 @@ int main()
     myGraph->printAdjacencyList();
 
     myGraph->DeepFirstSearch('A');
+    cout<<endl;
+    myGraph->BreadthFirstSearch('A');
 
 
     return 0;

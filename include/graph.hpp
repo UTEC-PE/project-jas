@@ -277,11 +277,7 @@ public:
     {
         NodeSeq visitedNodes,test;
         test= DeepFirstSearch( findNode(data), visitedNodes);
-
-       for (int i = 0; i < test.size(); ++i)
-       {
-          std::cout<<test[i]->getData()<<std::endl;;
-       }
+        printNodeSeq(test);
     }
 
     NodeSeq DeepFirstSearch(node* origen, NodeSeq visitedNodes){
@@ -290,7 +286,7 @@ public:
             EdgeSeq* nodeEdges = &(origen->edges);
             for(auto it : *nodeEdges)
             {   
-                if (!visitedDFS((*it).nodes[1], visitedNodes ))
+                if (!visited((*it).nodes[1], visitedNodes ))
                 {
                     visitedNodes= DeepFirstSearch((*it).nodes[1], visitedNodes);
                 }
@@ -299,7 +295,7 @@ public:
     return visitedNodes;        
     }
 
-    bool visitedDFS(node* node , NodeSeq visitedNodes){
+    bool visited(node* node , NodeSeq visitedNodes){
         for (int i = 0; i < visitedNodes.size(); ++i)
         {
             if (node == visitedNodes[i])
@@ -311,6 +307,54 @@ public:
         return false;
     }
 
+    void printNodeSeq(NodeSeq list){
+        for (int i = 0; i < list.size(); ++i)
+       {
+          std::cout<<list[i]->getData()<<' ';;
+       }
+       std::cout<<std::endl;
+    }
+
+    void BreadthFirstSearch(N data)
+    {
+        NodeSeq visitedNodes , queue , result;
+        queue.push_back(findNode(data));
+        result = BreadthFirstSearch( findNode(data), visitedNodes, queue );
+        printNodeSeq(result);
+
+    }
+
+    NodeSeq BreadthFirstSearch (node* origen, NodeSeq visitedNodes, NodeSeq queue)
+    {
+        origen = queue[0];
+        /*std::cout<<"origen: "<<origen->getData()<<std::endl;
+        std::cout<<"queue: "<<std::endl;
+        printNodeSeq(queue);
+        std::cout<<"visited: "<<std::endl;
+        printNodeSeq(visitedNodes);*/
+        
+
+
+        visitedNodes.push_back(origen);
+        EdgeSeq* nodeEdges = &(origen->edges);
+
+        for(auto it : *nodeEdges)
+        {   
+            if (!visited((*it).nodes[1], visitedNodes ) && !visited((*it).nodes[1], queue ))
+            {
+               queue.push_back((*it).nodes[1]); 
+            }
+        }
+        queue.erase(queue.begin());
+        
+        if (queue.empty() )
+        {
+            return visitedNodes;
+        }else{
+           return visitedNodes =BreadthFirstSearch(origen, visitedNodes, queue);
+           
+        }
+    }
 
 };
 
