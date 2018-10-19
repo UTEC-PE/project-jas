@@ -7,6 +7,7 @@
 #include "edge.hpp"
 #include <algorithm>
 #include <map>
+#include <queue>
 
 struct Traits {
 	typedef char N;
@@ -230,7 +231,7 @@ public:
                 std::cout << (*it).nodes[1]->getData() << " ";
             }
             std::cout << std::endl;
-        }   
+        }
     }
 
     self prim()
@@ -420,6 +421,30 @@ public:
         return *kruskalMST;
     }
 
+	bool isBipartite() {
+		std::map<N, int> color;
+		for(int i=0; i<nodeCount; i++){
+			//-1 no visitado
+			color[nodes[i]->getData()] = -1;
+		}
+		color[nodes[0]->getData()] = 1;
+		std::queue<node*> q;
+		q.push(nodes[0]);
+		while(!q.empty()){
+			node* u = q.front(); q.pop();
+			EdgeSeq* nodeEdges = &(u->edges);
+			for(auto it : *nodeEdges){
+				if(color[(*it).nodes[1]->getData()] == -1 ){
+					color[(*it).nodes[1]->getData()] = 1 - color[u->getData()];
+					q.push((*it).nodes[1]);
+				}else if(color[(*it).nodes[1]->getData()] == color[u->getData()]){
+					return false;
+				}
+
+            }
+		}
+		return true;
+	}
 };
 
 /* 
