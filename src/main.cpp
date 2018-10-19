@@ -21,6 +21,8 @@ int main()
     graph kGraph = myGraph.kruskal();
     kGraph.printAdjacencyList();
 
+    cout << "is connected: " << myGraph.isConnected() << endl;
+
     return 0;
 }
 

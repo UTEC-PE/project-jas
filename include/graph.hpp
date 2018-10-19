@@ -421,6 +421,42 @@ public:
         return *kruskalMST;
     }
 
+    bool isConnected()
+    {
+        EdgeSeq allEdges;
+        int disjointSet[nodeCount] = {};
+
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            disjointSet[i] = -1;
+            disjointSetPlaces[nodes[i]->getData()] = i;
+        }
+
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            EdgeSeq &currentNodeEdges = nodes[i]->edges;
+            allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
+        }
+        
+        for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
+        {
+            createsCycle(*i, disjointSet);
+        }
+
+        int counter = 0;
+
+        
+        for(size_t i = 0; i < nodeCount; i++)
+        {
+            if (disjointSet[i] < 0) counter++;
+            std::cout << disjointSet[i] << " ";
+        }
+        std::cout << std::endl;
+
+        if (counter > 1) return false;
+        return true;
+    }
+
 	bool isBipartite() {
 		std::map<N, int> color;
 		for(int i=0; i<nodeCount; i++){
