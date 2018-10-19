@@ -12,8 +12,6 @@ int main()
     myGraph.printAdjacencyList();
     myGraph.prim().printAdjacencyList();
 
-
-
     return 0;
 }
 
