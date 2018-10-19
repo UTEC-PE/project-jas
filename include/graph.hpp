@@ -481,6 +481,19 @@ public:
 		}
 		return true;
 	}
+    bool isFuertementeConexo()
+    {
+        for ( auto it: nodes)
+        {
+            int cant_nodes = DeepFirstSearch(it->getData()).size();
+
+            if (cant_nodes!= nodeCount)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 };
 
 /* 

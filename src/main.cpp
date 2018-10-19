@@ -22,6 +22,8 @@ int main()
     kGraph.printAdjacencyList();
 
     cout << "is connected: " << myGraph.isConnected() << endl;
+    cout << "is connected: " << myGraph.isFuertementeConexo() << endl;
+
 
     return 0;
 }
