@@ -13,16 +13,16 @@ int main()
 
     cout << endl;
 
-    graph pGraph = myGraph.prim();
-    pGraph.printAdjacencyList();
+    //graph pGraph = myGraph.prim();
+    //pGraph.printAdjacencyList();
 
     cout << endl;
 
-    graph kGraph = myGraph.kruskal();
-    kGraph.printAdjacencyList();
+    //graph kGraph = myGraph.kruskal();
+    //kGraph.printAdjacencyList();
 
     cout << "is connected: " << myGraph.isConnected() << endl;
-    cout << "is connected: " << myGraph.isFuertementeConexo() << endl;
+    cout << "is fuerteconnected: " << myGraph.isFuertementeConexo() << endl;
 
 
     cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;

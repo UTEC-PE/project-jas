@@ -310,6 +310,13 @@ public:
         printNodeSeq(test);
     }
 
+    NodeSeq DeepFirstSearch_NodeSeq(N data)
+    {
+        NodeSeq visitedNodes,test;
+        test= DeepFirstSearch( findNode(data), visitedNodes);
+        return test;
+    }
+
     NodeSeq DeepFirstSearch(node* origen, NodeSeq visitedNodes){
       visitedNodes.push_back(origen);
             
@@ -467,10 +474,8 @@ public:
         
         for(size_t i = 0; i < nodeCount; i++)
         {
-            if (disjointSet[i] < 0) counter++;
-            std::cout << disjointSet[i] << " ";
+            if (disjointSet[i] < 0) counter++;   
         }
-        std::cout << std::endl;
 
         if (counter > 1) return false;
         return true;
@@ -502,9 +507,9 @@ public:
 	}
     bool isFuertementeConexo()
     {
-        for ( auto it: nodes)
+        for(size_t i = 0; i < nodeCount; i++)
         {
-            int cant_nodes = DeepFirstSearch(it->getData()).size();
+            int cant_nodes = DeepFirstSearch_NodeSeq(nodes[i]->getData()).size();
 
             if (cant_nodes!= nodeCount)
             {
@@ -512,6 +517,7 @@ public:
             }
         }
         return true;
+
     }
 };
 
