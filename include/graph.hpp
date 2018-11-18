@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <map>
 #include <queue>
+#include <limits>
 
 struct Traits {
 	typedef char N;
@@ -519,6 +520,69 @@ public:
         return true;
 
     }
+
+    std::vector<int> bellmanFord(N start){
+        
+        int int_max = std::numeric_limits<int>::max();
+        std::vector<edge*> totalEdges;
+        std::map<node*, int> distance;
+
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            for (edge* n : nodes[i]->edges)
+            {
+                totalEdges.push_back(n);
+            }
+        }
+
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            distance[nodes[i]]=int_max;
+        }
+        distance[findNode(start)]=0;
+
+        for(int j=0; j< nodes.size()-1;j++){
+            for (int i = 0; i < totalEdges.size(); ++i)
+                {
+                    if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
+                    {
+                        distance[totalEdges[i]->nodes[1]] = (distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight);
+                    }
+                }
+            }
+
+        for (int i = 0; i < totalEdges.size(); ++i)
+                {
+                    if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
+                    {
+                        std::cout<<"This graph has negative cycles."<<std::endl;
+                    }
+                }
+
+
+
+        /*for (int i = 0; i < nodes.size(); ++i)
+        {
+            std::cout<<nodes[i]->getData()<<" ";
+        }
+        std::cout<<std::endl;
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            std::cout<<distance[nodes[i]]<<" ";
+        }
+        std::cout<<std::endl;*/
+
+        std::vector<int> distance_arr;
+
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            distance_arr.push_back(distance[nodes[i]]);
+        }
+
+        return distance_arr;
+    }
+
+    
 };
 
 /* 

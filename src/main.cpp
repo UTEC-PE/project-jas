@@ -6,11 +6,11 @@ using namespace std;
 
 int main()
 {
-	Read<graph> read1("grafo1.txt");
+	Read<graph> read1("grafo3.txt");
     graph myGraph1 = read1.getGraph();
 
     Read<graph> read2("grafo2.txt");
-    graph myGraph2 = read2.getGraph();
+    graph myGraph2 = read2.getGraph(); 
 
 
 
@@ -18,7 +18,7 @@ int main()
     
     cout << endl;
     
-    myGraph2.printAdjacencyList();
+   /* myGraph2.printAdjacencyList();
 
     cout << endl;
 
@@ -34,8 +34,16 @@ int main()
     cout << "is fuerteconnected: " << myGraph1.isFuertementeConexo() << endl;
 
     cout << "is connected: " << myGraph2.isConnected() << endl;
-    cout << "is fuerteconnected: " << myGraph2.isFuertementeConexo() << endl;
+    cout << "is fuerteconnected: " << myGraph2.isFuertementeConexo() << endl;*/
+    //map<Node*, int> distance;
+    
+    //vector<Node<graph>*> answer;
+    vector<int> v = myGraph1.bellmanFord('1');
 
+    for (int i = 0; i < myGraph1.getNodeCount(); ++i)
+    {
+        cout<<v[i]<<" ";
+    }
 
     //cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;
 
