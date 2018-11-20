@@ -176,7 +176,9 @@ public:
 
     void addEdge(N begin, N end, E weight)
     {
-        addEdge( findNode(begin), findNode(end), weight );
+		if(!findEdge(begin, end)){
+			addEdge( findNode(begin), findNode(end), weight );
+		}
     }
 
     void addEdge(N begin, N end)
@@ -215,7 +217,7 @@ public:
 
     edge* findEdge(N start, N end)
     {
-        findEdge(findNode(start), findNode(end));
+        return findEdge(findNode(start), findNode(end));
     }
 
     double calculateDensity()
