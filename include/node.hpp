@@ -57,7 +57,8 @@ public:
 	}
 
 	N getData() { return data; }
-
+	double getX(){ return x;}
+	double getY(){ return y;}
 	~Node() {
 		while(!edges.empty())
 		{
