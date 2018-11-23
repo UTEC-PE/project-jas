@@ -29,7 +29,11 @@ public:
 		x = distribution(generator);
 		y = distribution(generator);
 	};
-
+	Node(const Node<G> &copy){
+		data = copy.data;
+		x = copy.x;
+		y = copy.y;
+	};
 	int inDegree;
 	int outDegree;	// If the graph is not directed, only outDegree will be used
 	int &degree = outDegree;
