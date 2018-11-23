@@ -338,7 +338,6 @@ public:
         {
             if (node == visitedNodes[i])
             {
-
                 return true;
             }
         }
@@ -526,6 +525,8 @@ public:
         int int_max = std::numeric_limits<int>::max();
         std::vector<edge*> totalEdges;
         std::map<node*, int> distance;
+        std::map<node*,node*> prev;
+
 
         for (int i = 0; i < nodes.size(); ++i)
         {
@@ -538,24 +539,48 @@ public:
         for (int i = 0; i < nodes.size(); ++i)
         {
             distance[nodes[i]]=int_max;
+            prev[nodes[i]]=nullptr;
         }
         distance[findNode(start)]=0;
 
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            std::cout<<distance[nodes[i]]<<" ";
+        }
+        std::cout<<std::endl;
+
         for(int j=0; j< nodes.size()-1;j++){
+
             for (int i = 0; i < totalEdges.size(); ++i)
                 {
-                    if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
-                    {
-                        distance[totalEdges[i]->nodes[1]] = (distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight);
-                    }
+                    if((distance[totalEdges[i]->nodes[0]]) != int_max )  
+                        {
+                            if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
+                                {
+                                    distance[totalEdges[i]->nodes[1]] = (distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight);
+                                    prev[totalEdges[i]->nodes[1]] = totalEdges[i]->nodes[0];    
+                                }
+                        }
                 }
             }
 
+
+ for (int i = 0; i < nodes.size(); ++i)
+        {
+            if(prev[nodes[i]]){
+                std::cout<<prev[nodes[i]]->getData()<<" "<<distance[nodes[i]]<<" "<<nodes[i]->getData();
+            }
+            std::cout<<std::endl;
+        }
+        std::cout<<std::endl;
+
         for (int i = 0; i < totalEdges.size(); ++i)
                 {
-                    if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
-                    {
-                        std::cout<<"This graph has negative cycles."<<std::endl;
+                    if((distance[totalEdges[i]->nodes[0]]) != int_max )  {
+                        if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
+                        {
+                            std::cout<<"This graph has negative cycles."<<std::endl;
+                        }
                     }
                 }
 
@@ -581,8 +606,51 @@ public:
 
         return distance_arr;
     }
-
     
+    NodeSeq greedy_bfs(N start, N end){
+    
+        node* begin  = this->findNode(start);
+        node* last = this->findNode(end);
+        node* temp = begin;
+        NodeSeq visited_list , route;
+        visited_list.push_back(begin);
+        route.push_back(begin);
+        
+        while(visited_list.back() != last)
+        { 
+            node* menor_vecino = nullptr;
+            int menor_weight = std::numeric_limits<int>::max();
+            EdgeSeq* nodeEdges = &(temp->edges);
+
+            for(auto it : *nodeEdges)
+
+    //                    for (int i = 0; i < temp->edges.size() ; ++i)
+                        {
+                            if (it->weight < menor_weight && !visited(((*it).nodes[1]),visited_list))
+                            {
+                               menor_weight = it->weight;
+                               menor_vecino = it->nodes[1];
+                            }
+                        }
+
+                       if(menor_vecino){
+                            visited_list.push_back(menor_vecino);
+                            route.push_back(menor_vecino);
+                            temp= route.back();
+           
+                       }else{
+                           route.pop_back();
+                           temp= route.back();
+                       }
+                    } 
+
+                       
+            for (int i = 0; i < route.size(); ++i)
+            {
+                std::cout<<route[i]->getData()<<" ";
+            }
+            return route;
+        }
 };
 
 /* 

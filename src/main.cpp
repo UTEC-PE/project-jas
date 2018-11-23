@@ -2,6 +2,7 @@
 #include <string>
 #include "graph.hpp"
 #include "read.hpp"
+#include <limits>
 using namespace std;
 
 int main()
@@ -14,7 +15,7 @@ int main()
 
 
 
-    myGraph1.printAdjacencyList();
+    myGraph2.printAdjacencyList();
     
     cout << endl;
     
@@ -37,13 +38,18 @@ int main()
     cout << "is fuerteconnected: " << myGraph2.isFuertementeConexo() << endl;*/
     //map<Node*, int> distance;
     
-    //vector<Node<graph>*> answer;
-    vector<int> v = myGraph1.bellmanFord('1');
+    int int_max = std::numeric_limits<int>::max();
+    cout<<int_max<<endl;
 
-    for (int i = 0; i < myGraph1.getNodeCount(); ++i)
+    vector<Node<graph>*> answer;
+    vector<int> v = myGraph2.bellmanFord('A');
+
+    for (int i = 0; i < myGraph2.getNodeCount(); ++i)
     {
         cout<<v[i]<<" ";
     }
+
+    //myGraph1.greedy_bfs('A','B');
 
     //cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;
 
