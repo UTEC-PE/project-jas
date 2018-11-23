@@ -484,7 +484,8 @@ public:
         return true;
     }
 
-	bool isBipartite() {
+	bool isBipartite() 
+    {
 		std::map<N, int> color;
 		for(int i=0; i<nodeCount; i++){
 			//-1 no visitado
@@ -523,8 +524,8 @@ public:
 
     }
 
-    std::vector<int> bellmanFord(N start){
-        
+    std::vector<int> bellmanFord(N start)
+    {
         int int_max = std::numeric_limits<int>::max();
         std::vector<edge*> totalEdges;
         std::map<node*, int> distance;
@@ -584,6 +585,78 @@ public:
         return distance_arr;
     }
 
+    struct nodeCmp
+    {
+        bool operator()(node* a, node* b)
+        {
+            return (a->getData() < b->getData());
+        }
+    };
+
+    std::vector<std::vector<int>> floydWarshall()
+    {
+        sort(nodes.begin(), nodes.end(), nodeCmp());
+
+        int inf = std::numeric_limits<int>::max();
+        int inf = 9;
+
+        std::map<node*, int> pos;
+
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            pos[nodes[i]] = i;
+        }
+
+        std::vector<std::vector<int>> dist(v, std::vector<int>(v, inf));
+
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            dist[i][i] = 0;
+        }
+
+        for (ni = nodes.begin(); ni != nodes.end(); ++ni)
+        {
+            EdgeSeq &edgeList = (*ni)->edges;
+            for (ei = edgeList.begin(); ei != edgeList.end(); ++ei)
+            {
+                edge* &currentEdge = *ei;
+                dist[pos[currentEdge->nodes[0]]][pos[currentEdge->nodes[1]]] = currentEdge->weight;
+                if (!directed)
+                    dist[pos[currentEdge->nodes[1]]][pos[currentEdge->nodes[0]]] = currentEdge->weight;
+            }
+        }
+
+        int n_size = nodes.size();
+
+        for (int k = 0; k < n_size; k++)
+        {
+            for (int i = 0; i < n_size; i++)
+            {
+                for (int j = 0; j < n_size; j++)
+                {
+                    if (dist[i][j] > dist [i][k] +  dist[k][j])
+                    {
+                        dist[i][j] = dist [i][k] +  dist[k][j];
+                        if (!directed)
+                            dist[j][i] = dist [i][k] +  dist[k][j];
+                    }
+                }
+            }
+        }
+
+        // DEBUG
+        for (int i = 0; i < dist.size(); i++)
+        {
+            for (int j = 0; j < dist[i].size(); j++)
+            {
+                std::cout << dist[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        
+        return dist;
+    }
     
 };
 
