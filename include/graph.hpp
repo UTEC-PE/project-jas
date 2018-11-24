@@ -597,8 +597,8 @@ public:
     {
         sort(nodes.begin(), nodes.end(), nodeCmp());
 
-        int inf = std::numeric_limits<int>::max();
-        int inf = 9;
+        int inf = 999999;
+        int n_size = nodes.size();
 
         std::map<node*, int> pos;
 
@@ -607,7 +607,7 @@ public:
             pos[nodes[i]] = i;
         }
 
-        std::vector<std::vector<int>> dist(v, std::vector<int>(v, inf));
+        std::vector<std::vector<int>> dist(n_size, std::vector<int>(n_size, inf));
 
         for (int i = 0; i < nodes.size(); i++)
         {
@@ -621,12 +621,8 @@ public:
             {
                 edge* &currentEdge = *ei;
                 dist[pos[currentEdge->nodes[0]]][pos[currentEdge->nodes[1]]] = currentEdge->weight;
-                if (!directed)
-                    dist[pos[currentEdge->nodes[1]]][pos[currentEdge->nodes[0]]] = currentEdge->weight;
             }
         }
-
-        int n_size = nodes.size();
 
         for (int k = 0; k < n_size; k++)
         {
@@ -637,8 +633,6 @@ public:
                     if (dist[i][j] > dist [i][k] +  dist[k][j])
                     {
                         dist[i][j] = dist [i][k] +  dist[k][j];
-                        if (!directed)
-                            dist[j][i] = dist [i][k] +  dist[k][j];
                     }
                 }
             }
