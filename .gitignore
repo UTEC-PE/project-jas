@@ -4,3 +4,7 @@ bin
 \#*
 .\#*
 *.out
+.directory
+mymain.cpp
+graph_construct5.txt
+*.txt
