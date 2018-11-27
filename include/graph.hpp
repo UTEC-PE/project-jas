@@ -795,82 +795,59 @@ void printRoute(){
         return dist;
     }
     
+    int minDistance(std::vector<std::pair<node*, int>> distances, std::vector<bool> visited)
+    {
+        int min = 9999;
+        int min_index = 9999;
+        
+        for (int i = 0; i < distances.size(); i++)
+        {
+            if (visited[i] == false && std::get<1>(distances[i]) <= min)
+            {
+                min = std::get<1>(distances[i]);
+                min_index = i;
+            }
+        }
+        return min_index;
+    }
+
+    int findIndexOfNode(node* n)
+    {
+        for (int i = 0; i < nodeCount; i++)
+        {
+            if (n == nodes[i])
+                return i;
+        }
+        return -1;
+    }
+
     void dijkstra(node* start)
     {
-        int inf = 99999;
-        std::vector<std::tuple<int, node*, node*>> output(nodeCount, std::make_tuple(inf, nullptr, nullptr));
-        output[0] = std::make_tuple(0, start, nullptr);
-
-        for (int i = 1; i < output.size(); i++)
-        {
-            std::get<1>(output[i]) = nodes[i];
-        }
+        int inf = 9999;
+        std::vector<std::pair<node*, int>> distances(nodeCount, std::make_pair(nullptr, 9999));
+        distances[0] = std::make_pair(start, 0);
 
         std::vector<bool> visited(nodeCount, false);
-        
-        queue.push_back(start);
 
-        while (queue.size() != 0)
+        for (int i = 0; i < nodeCount; i++)
         {
-            node* &u = queue.front();
-            EdgeSeq &edgesOfMin = u->edges;
-            for (int i = 0; i < edgesOfMin.size(); i++)
+            node* &currentNode = nodes[i];
+            int u = minDistance(distances, visited);
+            visited[u] = true;
+
+            for (int j = 0; j < currentNode->edges.size(); j++)
             {
-                node* &w = (edgesOfMin[i])->nodes[1];
-
-                int dist = 0;
-                bool found = false;
-
-                // dist = d(u) + weight(u,w)
-
-                // Finding dist(u)
-                for (int j = 0; j < output.size() && !found; j++)
-                {
-                    if (std::get<1>(output[j]) == u)
-                    {
-                        int &dist_u = std::get<0>(output[j]);
-                        dist += dist_u;
-                    }
-
-                }
-
-                dist += edgesOfMin[i]->weight;
-                
-                // Finding dist(w)
-                int dist_w = 0;
-                int index_w = 0;
-                for (int j = 0; j < output.size() && !found; j++)
-                {
-                    if (std::get<1>(output[j]) == w)
-                    {
-                        dist_w = std::get<0>(output[j]);
-                        index_w = j;
-                    }
-                }
-
-                // Is w in the queue?
-                found = false;
-                for (int j = 0; j < queue.size() && !found; j++)
-                {
-                    if (w == queue[j])
-                        found = true;
-                }
-
-                // If w in queue and d(w) > dist:
-                if (found && dist_w > dist)
-                {
-                    std::get<0>(output[index_w]) = dist;
-                    std::get<2>(output[index_w]) = u;
-                }
-                else if (std::get<2>(output[index_w]) == nullptr)
-                {
-                    std::get<0>(output[index_w]) = dist;
-                    std::get<2>(output[index_w]) = u;
-                    queue.push_back(w);
-                    std::sort(queue.begin(), queue.end(), [](std::tuple<int, node*, node*> element1, std::tuple<int, node*, node*> element2){return std::get<0>(element1) < std::get<0>(element2);});
-                }
+                int v = findIndexOfNode(currentNode->edges[j]->nodes[1]);
+                if (!visited[v] && (std::get<1>(distances[u]) + currentNode->edges[j]->weight < std::get<1>(distances[v])))
+                    std::get<1>(distances[v]) = std::get<1>(distances[u]) + currentNode->edges[j]->weight;
             }
-            pop_front(queue);
+        }
+
+        //DEBUG: Print
+        std::cout << "Distances:" << std::endl;
+        for (int i = 0; i < distances.size(); i++)
+        {
+            std::cout << (std::get<0>(distances[0]))->getData() << "  " << std::get<1>(distances[0]) << std::endl;
         }
     }
 };
