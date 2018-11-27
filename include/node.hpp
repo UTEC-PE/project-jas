@@ -82,7 +82,7 @@ public:
 		while(!edges.empty())
 		{
 			delete edges.front();
-			edges.pop_front();
+			//edges.pop_front();
 		}
 	};
 };

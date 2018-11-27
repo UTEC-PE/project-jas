@@ -1,6 +1,7 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include <queue>
 #include <vector>
 #include <list>
 #include "node.hpp"
@@ -32,7 +33,8 @@ public:
 
     /* A helper typedef for the core functions.
 	   This is NOT the Adjacency List. It is inherited by the nodes. */
-	typedef std::list<edge*> EdgeSeq;
+       // ded
+	typedef std::vector<edge*> EdgeSeq;
     
 	typedef typename Tr::N N;
 	typedef typename Tr::E E;
@@ -793,7 +795,84 @@ void printRoute(){
         return dist;
     }
     
+    void dijkstra(node* start)
+    {
+        int inf = 99999;
+        std::vector<std::tuple<int, node*, node*>> output(nodeCount, std::make_tuple(inf, nullptr, nullptr));
+        output[0] = std::make_tuple(0, start, nullptr);
 
+        for (int i = 1; i < output.size(); i++)
+        {
+            std::get<1>(output[i]) = nodes[i];
+        }
+
+        std::vector<bool> visited(nodeCount, false);
+        
+        queue.push_back(start);
+
+        while (queue.size() != 0)
+        {
+            node* &u = queue.front();
+            EdgeSeq &edgesOfMin = u->edges;
+            for (int i = 0; i < edgesOfMin.size(); i++)
+            {
+                node* &w = (edgesOfMin[i])->nodes[1];
+
+                int dist = 0;
+                bool found = false;
+
+                // dist = d(u) + weight(u,w)
+
+                // Finding dist(u)
+                for (int j = 0; j < output.size() && !found; j++)
+                {
+                    if (std::get<1>(output[j]) == u)
+                    {
+                        int &dist_u = std::get<0>(output[j]);
+                        dist += dist_u;
+                    }
+
+                }
+
+                dist += edgesOfMin[i]->weight;
+                
+                // Finding dist(w)
+                int dist_w = 0;
+                int index_w = 0;
+                for (int j = 0; j < output.size() && !found; j++)
+                {
+                    if (std::get<1>(output[j]) == w)
+                    {
+                        dist_w = std::get<0>(output[j]);
+                        index_w = j;
+                    }
+                }
+
+                // Is w in the queue?
+                found = false;
+                for (int j = 0; j < queue.size() && !found; j++)
+                {
+                    if (w == queue[j])
+                        found = true;
+                }
+
+                // If w in queue and d(w) > dist:
+                if (found && dist_w > dist)
+                {
+                    std::get<0>(output[index_w]) = dist;
+                    std::get<2>(output[index_w]) = u;
+                }
+                else if (std::get<2>(output[index_w]) == nullptr)
+                {
+                    std::get<0>(output[index_w]) = dist;
+                    std::get<2>(output[index_w]) = u;
+                    queue.push_back(w);
+                    std::sort(queue.begin(), queue.end(), [](std::tuple<int, node*, node*> element1, std::tuple<int, node*, node*> element2){return std::get<0>(element1) < std::get<0>(element2);});
+                }
+            }
+            pop_front(queue);
+        }
+    }
 };
 
 /* 
