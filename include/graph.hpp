@@ -63,10 +63,13 @@ public:
 	
     void addNode(N data)
     {
+        //std::cout<<"-"<<data<<" ";
+        //std::cout<<"°"<<findNode(data)<<" ";
         if (findNode(data) == nullptr)
         {
             node* newNode = new node(data);
             nodes.push_back(newNode);
+
             nodeCount++;
         }
     }
@@ -75,6 +78,7 @@ public:
     node* findNode(N data)
     {
         if (nodeCount == 0) return nullptr;
+
 		for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
         {
 			if((*ni)->getData() == data) break;
@@ -520,16 +524,20 @@ public:
 
     }
 
-    std::vector<int> bellmanFord(N start){
+    self bellmanFord(N start){
+        Graph* bellmanFord = new Graph(true);
         
         int int_max = std::numeric_limits<int>::max();
         std::vector<edge*> totalEdges;
         std::map<node*, int> distance;
+        std::map<node*, int> cost;
         std::map<node*,node*> prev;
 
 
         for (int i = 0; i < nodes.size(); ++i)
         {
+            bellmanFord->addNode(nodes[i]->getData());
+
             for (edge* n : nodes[i]->edges)
             {
                 totalEdges.push_back(n);
@@ -542,13 +550,6 @@ public:
             prev[nodes[i]]=nullptr;
         }
         distance[findNode(start)]=0;
-
-        for (int i = 0; i < nodes.size(); ++i)
-        {
-            std::cout<<distance[nodes[i]]<<" ";
-        }
-        std::cout<<std::endl;
-
         for(int j=0; j< nodes.size()-1;j++){
 
             for (int i = 0; i < totalEdges.size(); ++i)
@@ -559,21 +560,17 @@ public:
                                 {
                                     distance[totalEdges[i]->nodes[1]] = (distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight);
                                     prev[totalEdges[i]->nodes[1]] = totalEdges[i]->nodes[0];    
+                                    cost[totalEdges[i]->nodes[1]] = totalEdges[i]->weight;
                                 }
                         }
                 }
             }
 
-
- for (int i = 0; i < nodes.size(); ++i)
-        {
+        for (int i = 0; i < nodes.size(); ++i){
             if(prev[nodes[i]]){
-                std::cout<<prev[nodes[i]]->getData()<<" "<<distance[nodes[i]]<<" "<<nodes[i]->getData();
+                bellmanFord->addEdge(nodes[i]->getData(),prev[nodes[i]]->getData(),cost[nodes[i]]);
             }
-            std::cout<<std::endl;
         }
-        std::cout<<std::endl;
-
         for (int i = 0; i < totalEdges.size(); ++i)
                 {
                     if((distance[totalEdges[i]->nodes[0]]) != int_max )  {
@@ -584,30 +581,11 @@ public:
                     }
                 }
 
-
-
-        /*for (int i = 0; i < nodes.size(); ++i)
-        {
-            std::cout<<nodes[i]->getData()<<" ";
-        }
-        std::cout<<std::endl;
-        for (int i = 0; i < nodes.size(); ++i)
-        {
-            std::cout<<distance[nodes[i]]<<" ";
-        }
-        std::cout<<std::endl;*/
-
-        std::vector<int> distance_arr;
-
-        for (int i = 0; i < nodes.size(); ++i)
-        {
-            distance_arr.push_back(distance[nodes[i]]);
-        }
-
-        return distance_arr;
+        return *bellmanFord;
     }
     
-    NodeSeq greedy_bfs(N start, N end){
+    self greedy_bfs(N start, N end){
+        Graph* greedy = new Graph(true);
     
         node* begin  = this->findNode(start);
         node* last = this->findNode(end);
@@ -616,41 +594,52 @@ public:
         visited_list.push_back(begin);
         route.push_back(begin);
         
+        for (int i = 0; i < nodes.size(); ++i)
+        {
+            greedy->addNode(nodes[i]->getData());   
+        }
+
         while(visited_list.back() != last)
         { 
             node* menor_vecino = nullptr;
             int menor_weight = std::numeric_limits<int>::max();
             EdgeSeq* nodeEdges = &(temp->edges);
 
-            for(auto it : *nodeEdges)
-
-    //                    for (int i = 0; i < temp->edges.size() ; ++i)
-                        {
-                            if (it->weight < menor_weight && !visited(((*it).nodes[1]),visited_list))
-                            {
+            for(auto it : *nodeEdges){
+                if (it->weight < menor_weight && !visited(((*it).nodes[1]),visited_list)){
                                menor_weight = it->weight;
                                menor_vecino = it->nodes[1];
-                            }
-                        }
-
-                       if(menor_vecino){
-                            visited_list.push_back(menor_vecino);
-                            route.push_back(menor_vecino);
-                            temp= route.back();
-           
-                       }else{
-                           route.pop_back();
-                           temp= route.back();
-                       }
-                    } 
-
-                       
-            for (int i = 0; i < route.size(); ++i)
-            {
-                std::cout<<route[i]->getData()<<" ";
+                    }
             }
-            return route;
+
+            if(menor_vecino){
+                visited_list.push_back(menor_vecino);
+                route.push_back(menor_vecino);
+                temp= route.back();
+            }else{
+                route.pop_back();
+                temp= route.back();
+            }
+        }        
+ 
+        for (int i = 0; i < route.size()-1; ++i)
+        {
+           greedy->addEdge(    route[i+1]->getData(),route[i]->getData()  , (this-> findEdge( route[i]->getData() , route[i+1]->getData() )  ) ->weight );
         }
+        return *greedy;
+
+    }
+
+void printRoute(){
+    for (int i = 0; i < nodes.size(); ++i)
+    {
+        std::cout<<nodes[i]->getData()<<" -> ";
+        int peso = 0;
+        peso = nodes[i]->route(peso);
+        std::cout<<"Peso: "<<peso<<std::endl;
+    }
+}
+
 };
 
 /* 

@@ -5,6 +5,8 @@
 #include <limits>
 using namespace std;
 
+
+
 int main()
 {
 	Read<graph> read1("grafo3.txt");
@@ -38,18 +40,18 @@ int main()
     cout << "is fuerteconnected: " << myGraph2.isFuertementeConexo() << endl;*/
     //map<Node*, int> distance;
     
-    int int_max = std::numeric_limits<int>::max();
-    cout<<int_max<<endl;
+    graph bellmanFord = myGraph2.bellmanFord('A');
 
-    vector<Node<graph>*> answer;
-    vector<int> v = myGraph2.bellmanFord('A');
+    bellmanFord.printRoute();
+    
+    cout<<endl;
 
-    for (int i = 0; i < myGraph2.getNodeCount(); ++i)
-    {
-        cout<<v[i]<<" ";
-    }
 
-    //myGraph1.greedy_bfs('A','B');
+
+    graph greedy = myGraph1.greedy_bfs('A','B');
+    
+    //cout<<greedy.getNodeCount();
+    greedy.printRoute();
 
     //cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;
 
