@@ -10,6 +10,7 @@
 #include <utility>
 #include <queue>
 #include <limits>
+#include <iomanip>
 
 struct Traits {
 	typedef char N;
@@ -533,10 +534,7 @@ public:
 
     self bellmanFord(N start){
         Graph* bellmanFord = new Graph(true);
-        
-
-    std::vector<int> bellmanFord(N start)
-    {
+    
         int int_max = std::numeric_limits<int>::max();
         std::vector<edge*> totalEdges;
         std::map<node*, int> distance;
@@ -653,7 +651,7 @@ void printRoute(){
         std::cout<<nodes[i]->getData()<<" -> ";
         int peso = 0;
         peso = nodes[i]->route(peso);
-        std::cout<<"Peso: "<<peso<<std::endl;
+        std::cout<<"\tPeso: "<<peso<<std::endl;
     }
 }
 
