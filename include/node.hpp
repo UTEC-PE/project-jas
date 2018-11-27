@@ -61,8 +61,23 @@ public:
 	}
 
 	N getData() { return data; }
+
+
+	int route(int peso){
+		if (edges.size())
+		{
+			peso = edges.front()->nodes[1]->route(peso);
+			std::cout<<data<<" ";
+			return (peso + edges.front()->weight);		
+		}
+		std::cout<<data<<" ";
+		return 0;
+	}
+
+
 	double getX(){ return x;}
 	double getY(){ return y;}
+
 	~Node() {
 		while(!edges.empty())
 		{
