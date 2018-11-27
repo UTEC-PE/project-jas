@@ -825,9 +825,15 @@ void printRoute(){
     {
         int inf = 9999;
         std::vector<std::pair<node*, int>> distances(nodeCount, std::make_pair(nullptr, 9999));
-        distances[0] = std::make_pair(start, 0);
 
         std::vector<bool> visited(nodeCount, false);
+
+        for (int i = 0; i < distances.size(); i++)
+        {
+            std::get<0>(distances[i]) = nodes[i];
+        }
+
+        distances[findIndexOfNode(start)] = std::make_pair(start, 0);
 
         for (int i = 0; i < nodeCount; i++)
         {
@@ -838,16 +844,19 @@ void printRoute(){
             for (int j = 0; j < currentNode->edges.size(); j++)
             {
                 int v = findIndexOfNode(currentNode->edges[j]->nodes[1]);
+                
                 if (!visited[v] && (std::get<1>(distances[u]) + currentNode->edges[j]->weight < std::get<1>(distances[v])))
-                    std::get<1>(distances[v]) = std::get<1>(distances[u]) + currentNode->edges[j]->weight;
+                    {
+                        std::get<1>(distances[v]) = std::get<1>(distances[u]) + currentNode->edges[j]->weight;
+                    }
             }
         }
 
         //DEBUG: Print
-        std::cout << "Distances:" << std::endl;
+        std::cout << "Distances, starting from " << start->getData() <<":" << std::endl;
         for (int i = 0; i < distances.size(); i++)
         {
-            std::cout << (std::get<0>(distances[0]))->getData() << "  " << std::get<1>(distances[0]) << std::endl;
+            std::cout << (std::get<0>(distances[i]))->getData() << "  " << std::get<1>(distances[i]) << std::endl;
         }
     }
 };
