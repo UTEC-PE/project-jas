@@ -7,6 +7,7 @@
 #include "edge.hpp"
 #include <algorithm>
 #include <map>
+#include <utility>
 #include <queue>
 #include <limits>
 
@@ -21,7 +22,7 @@ public:
 	typedef Graph<Tr> self;
 
     /* The whole graph is being passed as a trait to Node so it can have N and E
-    in it without explicitly declaring so. Same thing with Edge. */
+	   in it without explicitly declaring so. Same thing with Edge. */
 	typedef Node<self> node;
 	typedef Edge<self> edge;
 
@@ -29,7 +30,7 @@ public:
 	typedef std::vector<node*> NodeSeq;
 
     /* A helper typedef for the core functions.
-    This is NOT the Adjacency List. It is inherited by the nodes. */
+	   This is NOT the Adjacency List. It is inherited by the nodes. */
 	typedef std::list<edge*> EdgeSeq;
     
 	typedef typename Tr::N N;
@@ -45,7 +46,11 @@ private:
     double parameterOfDensity = 0.8;
 
     std::map<N,int> disjointSetPlaces;
-
+	double manhattan(std::map<N , std::pair<double, double>> coord, N i, N f){
+		double x = coord[i].first - coord[f].first;
+		double y = coord[i].second - coord[f].second;
+		return fabs(x) + fabs(y);
+	}
 public:
     Graph(): directed(false), nodeCount(0) {};
 
@@ -66,12 +71,11 @@ public:
         //std::cout<<"-"<<data<<" ";
         //std::cout<<"°"<<findNode(data)<<" ";
         if (findNode(data) == nullptr)
-        {
-            node* newNode = new node(data);
-            nodes.push_back(newNode);
-
-            nodeCount++;
-        }
+			{
+				node* newNode = new node(data);
+				nodes.push_back(newNode);
+				nodeCount++;
+			}
     }
 	bool isDirected(){ return directed;}
 
@@ -80,9 +84,9 @@ public:
         if (nodeCount == 0) return nullptr;
 
 		for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
-        {
-			if((*ni)->getData() == data) break;
-		}
+			{
+				if((*ni)->getData() == data) break;
+			}
 
 		return (*ni);
     }
@@ -92,13 +96,13 @@ public:
         if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = nodes.begin(); ni!=nodes.end(); ++ni)
-        {
-			if((*ni)->getData() == n->getData())
-            {
-                found = true;
-                break;
-            }
-		}
+			{
+				if((*ni)->getData() == n->getData())
+					{
+						found = true;
+						break;
+					}
+			}
 
         if (!found) return nullptr;
         else return (*ni);
@@ -109,13 +113,13 @@ public:
         if (nodeCount == 0) return nullptr;
         bool found = false;
         for(ni = where.begin(); ni!=where.end(); ++ni)
-        {
-			if((*ni)->getData() == n->getData())
-            {
-                found = true;
-                break;
-            }
-		}
+			{
+				if((*ni)->getData() == n->getData())
+					{
+						found = true;
+						break;
+					}
+			}
 
         if (!found) return nullptr;
         else return (*ni);
@@ -127,30 +131,30 @@ public:
 
         // Deletes all edges like [* - nodeToDelete]
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            if (nodes[i] == nodeToDelete) indexOfNodeToDelete = i;
-            else
-            {
-                EdgeSeq* nodeEdges = &(nodes[i]->edges);
+			{
+				if (nodes[i] == nodeToDelete) indexOfNodeToDelete = i;
+				else
+					{
+						EdgeSeq* nodeEdges = &(nodes[i]->edges);
             
-                for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end();)
-                {
-                    if ( (*it)->nodes[1] == nodeToDelete ) 
-                    {
-                        edgeWeight -= (*it)->weight;
-                        it = (*nodeEdges).erase(it);
-                    }
-                    else ++it;
-                }
-            }
-        }
+						for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end();)
+							{
+								if ( (*it)->nodes[1] == nodeToDelete ) 
+									{
+										edgeWeight -= (*it)->weight;
+										it = (*nodeEdges).erase(it);
+									}
+								else ++it;
+							}
+					}
+			}
 
         // Deletes all edges like [nodeToDelete - *]
         EdgeSeq* edgesOfNodeToDelete = &(nodeToDelete->edges);
         for(auto it = (*edgesOfNodeToDelete).begin(); it != (*edgesOfNodeToDelete).end(); ++it)
-        {
-            edgeWeight -= (*it)->weight;
-        }
+			{
+				edgeWeight -= (*it)->weight;
+			}
 
         nodes.erase(nodes.begin() + indexOfNodeToDelete);
         delete nodeToDelete;
@@ -166,10 +170,10 @@ public:
         edgeCount++;
         begin->outDegree++;
         if (!directed)
-        {
-            end->addEdge(end, begin, weight);
-            end->outDegree++;
-        }
+			{
+				end->addEdge(end, begin, weight);
+				end->outDegree++;
+			}
         else end->inDegree++;
     }
 
@@ -180,7 +184,9 @@ public:
 
     void addEdge(N begin, N end, E weight)
     {
-        addEdge( findNode(begin), findNode(end), weight );
+		if(!findEdge(begin, end)){
+			addEdge( findNode(begin), findNode(end), weight );
+		}
     }
 
     void addEdge(N begin, N end)
@@ -206,20 +212,20 @@ public:
     edge* findEdge(node* start, node* end)
     {
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            EdgeSeq* nodeEdges = &(nodes[i]->edges);
+			{
+				EdgeSeq* nodeEdges = &(nodes[i]->edges);
             
-            for(auto it : *nodeEdges)
-            {
-                if ((it)->nodes[0] == start && (it)->nodes[1] == end) return (it);
-            }
-        }
+				for(auto it : *nodeEdges)
+					{
+						if ((it)->nodes[0] == start && (it)->nodes[1] == end) return (it);
+					}
+			}
         return nullptr;   
     }
 
     edge* findEdge(N start, N end)
     {
-        findEdge(findNode(start), findNode(end));
+        return findEdge(findNode(start), findNode(end));
     }
 
     double calculateDensity()
@@ -237,75 +243,75 @@ public:
     void printNodes()
     {
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            std::cout << nodes[i]->getData() << " ";
-        }  
+			{
+				std::cout << nodes[i]->getData() << " ";
+			}  
         std::cout << std::endl;
     }
 
     void printAdjacencyList()
     {
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            std::cout << nodes[i]->getData() << " -> ";
-            EdgeSeq* nodeEdges = &(nodes[i]->edges);
+			{
+				std::cout << nodes[i]->getData() << " -> ";
+				EdgeSeq* nodeEdges = &(nodes[i]->edges);
             
-            for(auto it : *nodeEdges)
-            {
-                std::cout << (*it).nodes[1]->getData() << " ";
-            }
-            std::cout << std::endl;
-        }
+				for(auto it : *nodeEdges)
+					{
+						std::cout << (*it).nodes[1]->getData() << " ";
+					}
+				std::cout << std::endl;
+			}
     }
 
     self prim()
     {
         if (!directed)
-        {
-            Graph *primMST = new Graph(false);
+			{
+				Graph *primMST = new Graph(false);
 
-        primMST->addNode(nodes[0]->getData());
+				primMST->addNode(nodes[0]->getData());
 
-        NodeSeq &visited = (primMST->nodes);
+				NodeSeq &visited = (primMST->nodes);
 
-        while(visited.size() != nodeCount)
-        {
-            int minWeight = __INT_MAX__;
-            edge *edgeToAdd = new edge();
-            for(int i = 0; i < primMST->nodeCount; i++)
-            {
-                EdgeSeq* nodeEdges = &((findNode(visited[i]->getData())->edges));
+				while(visited.size() != nodeCount)
+					{
+						int minWeight = __INT_MAX__;
+						edge *edgeToAdd = new edge();
+						for(int i = 0; i < primMST->nodeCount; i++)
+							{
+								EdgeSeq* nodeEdges = &((findNode(visited[i]->getData())->edges));
             
-                for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end(); ++it)
-                {
-                    edge* &currentEdge = *it;
-                    if ( currentEdge->weight < minWeight ) 
-                    {
-                        bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
-                        if ( isNotInVisited )
-                        {
-                            minWeight = currentEdge->weight;
-                            edgeToAdd = currentEdge;
-                        }
-                    }
-                }
-            }
-            primMST->addNode(edgeToAdd->nodes[1]->getData());
-            primMST->addEdge(edgeToAdd->nodes[0]->getData(), edgeToAdd->nodes[1]->getData(), edgeToAdd->weight);
-        }
+								for(auto it = (*nodeEdges).begin(); it != (*nodeEdges).end(); ++it)
+									{
+										edge* &currentEdge = *it;
+										if ( currentEdge->weight < minWeight ) 
+											{
+												bool isNotInVisited = findNode(currentEdge->nodes[1], visited) == nullptr;
+												if ( isNotInVisited )
+													{
+														minWeight = currentEdge->weight;
+														edgeToAdd = currentEdge;
+													}
+											}
+									}
+							}
+						primMST->addNode(edgeToAdd->nodes[1]->getData());
+						primMST->addEdge(edgeToAdd->nodes[0]->getData(), edgeToAdd->nodes[1]->getData(), edgeToAdd->weight);
+					}
 
-        return *primMST;
-        } else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
+				return *primMST;
+			} else throw std::runtime_error("No se puede aplicar el Algoritmo de Prim a un Grafo direccionado");
     } 
 
 
     ~Graph()
     {
         while(!nodes.empty())
-        {
-            delete nodes.back();
-            nodes.pop_back();
-        }
+			{
+				delete nodes.back();
+				nodes.pop_back();
+			}
     }
     
     void DeepFirstSearch(N data)
@@ -323,37 +329,37 @@ public:
     }
 
     NodeSeq DeepFirstSearch(node* origen, NodeSeq visitedNodes){
-      visitedNodes.push_back(origen);
+		visitedNodes.push_back(origen);
             
-            EdgeSeq* nodeEdges = &(origen->edges);
-            for(auto it : *nodeEdges)
+		EdgeSeq* nodeEdges = &(origen->edges);
+		for(auto it : *nodeEdges)
             {   
                 if (!visited((*it).nodes[1], visitedNodes ))
-                {
-                    visitedNodes= DeepFirstSearch((*it).nodes[1], visitedNodes);
-                }
+					{
+						visitedNodes= DeepFirstSearch((*it).nodes[1], visitedNodes);
+					}
 
             }
-    return visitedNodes;        
+		return visitedNodes;        
     }
 
     bool visited(node* node , NodeSeq visitedNodes){
         for (int i = 0; i < visitedNodes.size(); ++i)
         {
-            if (node == visitedNodes[i])
-            {
-                return true;
-            }
-        }
+				if (node == visitedNodes[i])
+					{
+						return true;
+					}
+			}
         return false;
     }
 
     void printNodeSeq(NodeSeq list){
         for (int i = 0; i < list.size(); ++i)
-       {
-          std::cout<<list[i]->getData()<<' ';;
-       }
-       std::cout<<std::endl;
+			{
+				std::cout<<list[i]->getData()<<' ';;
+			}
+		std::cout<<std::endl;
     }
 
     void BreadthFirstSearch(N data)
@@ -372,19 +378,19 @@ public:
         EdgeSeq* nodeEdges = &(origen->edges);
 
         for(auto it : *nodeEdges)
-        {   
-            if (!visited((*it).nodes[1], visitedNodes ) && !visited((*it).nodes[1], queue ))
-            {
-               queue.push_back((*it).nodes[1]); 
-            }
-        }
+			{   
+				if (!visited((*it).nodes[1], visitedNodes ) && !visited((*it).nodes[1], queue ))
+					{
+						queue.push_back((*it).nodes[1]); 
+					}
+			}
         queue.erase(queue.begin());
         
         if (queue.empty() )
-        {
-            return visitedNodes;
-        }else{
-           return visitedNodes =BreadthFirstSearch(origen, visitedNodes, queue);
+			{
+				return visitedNodes;
+			}else{
+			return visitedNodes =BreadthFirstSearch(origen, visitedNodes, queue);
            
         }
     }
@@ -408,10 +414,10 @@ public:
 
         if (nodeBeginParent == nodeEndParent) return true;
         else
-        {
-            disjointSet[nodeEndParent] = nodeBeginParent;
-            return false;
-        } 
+			{
+				disjointSet[nodeEndParent] = nodeBeginParent;
+				return false;
+			} 
     }
 
     self kruskal()
@@ -421,32 +427,32 @@ public:
         int disjointSet[nodeCount] = {};
 
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            disjointSet[i] = -1;
-            disjointSetPlaces[nodes[i]->getData()] = i;
-        }
+			{
+				disjointSet[i] = -1;
+				disjointSetPlaces[nodes[i]->getData()] = i;
+			}
 
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            EdgeSeq &currentNodeEdges = nodes[i]->edges;
-            allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
-        }
+			{
+				EdgeSeq &currentNodeEdges = nodes[i]->edges;
+				allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
+			}
 
         allEdges.sort(edgeCmp());
 
         for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
-        {
-            if (!createsCycle(*i, disjointSet))
-            {
-                kruskalMST->addNode((*i)->nodes[0]->getData());
-                kruskalMST->addNode((*i)->nodes[1]->getData());
+			{
+				if (!createsCycle(*i, disjointSet))
+					{
+						kruskalMST->addNode((*i)->nodes[0]->getData());
+						kruskalMST->addNode((*i)->nodes[1]->getData());
 
-                kruskalMST->addEdge(
-                    (*i)->nodes[0]->getData(),
-                    (*i)->nodes[1]->getData()
-                );
-            }
-        }
+						kruskalMST->addEdge(
+											(*i)->nodes[0]->getData(),
+											(*i)->nodes[1]->getData()
+											);
+					}
+			}
 
         return *kruskalMST;
     }
@@ -457,35 +463,36 @@ public:
         int disjointSet[nodeCount] = {};
 
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            disjointSet[i] = -1;
-            disjointSetPlaces[nodes[i]->getData()] = i;
-        }
+			{
+				disjointSet[i] = -1;
+				disjointSetPlaces[nodes[i]->getData()] = i;
+			}
 
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            EdgeSeq &currentNodeEdges = nodes[i]->edges;
-            allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
-        }
+			{
+				EdgeSeq &currentNodeEdges = nodes[i]->edges;
+				allEdges.insert(allEdges.end(), currentNodeEdges.begin(), currentNodeEdges.end());
+			}
         
         for(auto i = allEdges.begin(); i != allEdges.end(); ++i)
-        {
-            createsCycle(*i, disjointSet);
-        }
+			{
+				createsCycle(*i, disjointSet);
+			}
 
         int counter = 0;
 
         
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            if (disjointSet[i] < 0) counter++;   
-        }
+			{
+				if (disjointSet[i] < 0) counter++;   
+			}
 
         if (counter > 1) return false;
         return true;
     }
 
-	bool isBipartite() {
+	bool isBipartite() 
+    {
 		std::map<N, int> color;
 		for(int i=0; i<nodeCount; i++){
 			//-1 no visitado
@@ -512,14 +519,14 @@ public:
     bool isFuertementeConexo()
     {
         for(size_t i = 0; i < nodeCount; i++)
-        {
-            int cant_nodes = DeepFirstSearch_NodeSeq(nodes[i]->getData()).size();
+			{
+				int cant_nodes = DeepFirstSearch_NodeSeq(nodes[i]->getData()).size();
 
-            if (cant_nodes!= nodeCount)
-            {
-                return false;
-            }
-        }
+				if (cant_nodes!= nodeCount)
+					{
+						return false;
+					}
+			}
         return true;
 
     }
@@ -527,6 +534,9 @@ public:
     self bellmanFord(N start){
         Graph* bellmanFord = new Graph(true);
         
+
+    std::vector<int> bellmanFord(N start)
+    {
         int int_max = std::numeric_limits<int>::max();
         std::vector<edge*> totalEdges;
         std::map<node*, int> distance;
@@ -535,6 +545,7 @@ public:
 
 
         for (int i = 0; i < nodes.size(); ++i)
+
         {
             bellmanFord->addNode(nodes[i]->getData());
 
@@ -549,11 +560,13 @@ public:
             distance[nodes[i]]=int_max;
             prev[nodes[i]]=nullptr;
         }
+
         distance[findNode(start)]=0;
         for(int j=0; j< nodes.size()-1;j++){
 
             for (int i = 0; i < totalEdges.size(); ++i)
                 {
+
                     if((distance[totalEdges[i]->nodes[0]]) != int_max )  
                         {
                             if ((distance[totalEdges[i]->nodes[0]]+totalEdges[i]->weight) < distance[totalEdges[i]->nodes[1]])
@@ -563,8 +576,9 @@ public:
                                     cost[totalEdges[i]->nodes[1]] = totalEdges[i]->weight;
                                 }
                         }
+
                 }
-            }
+		}
 
         for (int i = 0; i < nodes.size(); ++i){
             if(prev[nodes[i]]){
@@ -578,8 +592,9 @@ public:
                         {
                             std::cout<<"This graph has negative cycles."<<std::endl;
                         }
+
                     }
-                }
+			}
 
         return *bellmanFord;
     }
@@ -594,6 +609,7 @@ public:
         visited_list.push_back(begin);
         route.push_back(begin);
         
+
         for (int i = 0; i < nodes.size(); ++i)
         {
             greedy->addNode(nodes[i]->getData());   
@@ -630,6 +646,7 @@ public:
 
     }
 
+
 void printRoute(){
     for (int i = 0; i < nodes.size(); ++i)
     {
@@ -639,6 +656,145 @@ void printRoute(){
         std::cout<<"Peso: "<<peso<<std::endl;
     }
 }
+
+    std::map<N, std::pair<double, N>> Astar(N begin, N end)
+    {
+		//bfs to get coords
+		std::queue<node*> q;
+		std::map<N, bool> visit;
+		q.push(nodes[0]);
+		std::map<N , std::pair<double, double>> coord;
+		while(!q.empty()){
+			node* u = q.front(); q.pop();
+			EdgeSeq* nodeEdges = &(u->edges);
+
+			for(auto it : *nodeEdges){
+				if( !visit[(*it).nodes[1]->getData()] ){
+					visit[(*it).nodes[1]->getData()] = true;
+					coord[(*it).nodes[1]->getData()] = std::make_pair((*it).nodes[1]->getX(), (*it).nodes[1]->getY());
+					q.push((*it).nodes[1]);
+				}
+            }
+		}
+		//fin get coords
+		//DISTANCIA: manhattan(coord,begin,end);
+		std::map<N,double> h;
+		for(auto it : coord) {
+			h[it.first] = manhattan(coord, it.first, end);
+		}
+		//Structure to save data 
+		//Graph* astar = new Graph(false);
+		std::map<N, std::pair<double, N>> table;
+		std::queue<node*> q2;
+
+		visit.clear();
+		q2.push(findNode(begin));
+		visit[begin] = true;
+		table[begin] = std::make_pair(h[begin], '\0');
+		node* u;
+		do{
+			u = q2.front(); q2.pop();
+			EdgeSeq* nodeEdges = &(u->edges);
+			double min = std::numeric_limits<double>::max();
+			for(auto it : *nodeEdges){
+				if( !visit[(*it).nodes[1]->getData()] ){
+					N data = (*it).nodes[1]->getData();
+					double w = (*it).weight;
+					if( min > h[data] + w){
+						min = h[data] + w;
+					}
+					table[data] = std::make_pair(h[data] + w, u->getData());
+				}
+            }
+			min = std::numeric_limits<double>::max();
+			N datamin;
+			for(auto it : table){
+				if( !visit[it.first] && min > it.second.first ){
+					min = it.second.first;
+					datamin = it.first;
+				}
+			}
+			visit[datamin] = true;
+			q2.push(findNode(datamin));			
+		}while( !q2.empty() && u->getData()!=end);
+
+		N iter = end;
+		while( table[iter].second != begin){
+			//isenter it table[iter.second ]
+			//astar->addEdge(iter, table[iter].second, findEdge(iter, table[iter].second)->weight);
+			iter = table[iter].second;
+		}
+		//astar->addEdge(iter, table[iter].second, findEdge(iter, table[iter].second)->weight);
+		return table;
+    }
+    
+    struct nodeCmp
+    {
+        bool operator()(node* a, node* b)
+        {
+            return (a->getData() < b->getData());
+        }
+    };
+
+    std::vector<std::vector<int>> floydWarshall()
+    {
+        sort(nodes.begin(), nodes.end(), nodeCmp());
+
+        int inf = 999999;
+        int n_size = nodes.size();
+
+        std::map<node*, int> pos;
+
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            pos[nodes[i]] = i;
+        }
+
+        std::vector<std::vector<int>> dist(n_size, std::vector<int>(n_size, inf));
+
+        for (int i = 0; i < nodes.size(); i++)
+        {
+            dist[i][i] = 0;
+        }
+
+        for (ni = nodes.begin(); ni != nodes.end(); ++ni)
+        {
+            EdgeSeq &edgeList = (*ni)->edges;
+            for (ei = edgeList.begin(); ei != edgeList.end(); ++ei)
+            {
+                edge* &currentEdge = *ei;
+                dist[pos[currentEdge->nodes[0]]][pos[currentEdge->nodes[1]]] = currentEdge->weight;
+            }
+        }
+
+        for (int k = 0; k < n_size; k++)
+        {
+            for (int i = 0; i < n_size; i++)
+            {
+                for (int j = 0; j < n_size; j++)
+                {
+                    if (dist[i][j] > dist [i][k] +  dist[k][j])
+                    {
+                        dist[i][j] = dist [i][k] +  dist[k][j];
+                    }
+                }
+            }
+        }
+
+        // DEBUG
+        for (int i = 0; i < dist.size(); i++)
+        {
+            for (int j = 0; j < dist[i].size(); j++)
+            {
+                std::cout << dist[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+        
+        return dist;
+    }
+    
 
 };
 
