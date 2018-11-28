@@ -310,11 +310,11 @@ public:
 
     ~Graph()
     {
-        while(!nodes.empty())
+        /* while(!nodes.empty())
 			{
 				delete nodes.back();
 				nodes.pop_back();
-			}
+			} */
     }
     
     void DeepFirstSearch(N data)
@@ -595,7 +595,7 @@ public:
 
                     }
 			}
-
+        
         return *bellmanFord;
     }
     
@@ -725,6 +725,14 @@ void printRoute(){
 			iter = table[iter].second;
 		}
 		//astar->addEdge(iter, table[iter].second, findEdge(iter, table[iter].second)->weight);
+
+        
+        for(auto i: table)
+        {
+            std::cout << i.first << " " << i.second.first << " " << i.second.second << std::endl; 
+        }
+        
+
 		return table;
     }
     
@@ -802,7 +810,10 @@ void printRoute(){
         {
             for (int j = 0; j < dist[i].size(); j++)
             {
-                std::cout << dist[i][j] << "\t";
+                if (dist[i][j] != inf)
+                    std::cout << dist[i][j] << "\t";
+                else
+                    std::cout << "x\t";
             }
             std::cout << std::endl;
         }
