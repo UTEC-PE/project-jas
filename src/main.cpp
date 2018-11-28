@@ -2,59 +2,56 @@
 #include <string>
 #include "graph.hpp"
 #include "read.hpp"
-#include <limits>
 using namespace std;
-
-
 
 int main()
 {
-	Read<graph> read1("grafo3.txt");
-    graph myGraph1 = read1.getGraph();
+    graph* g = new graph(true);
 
-    Read<graph> read2("grafo2.txt");
-    graph myGraph2 = read2.getGraph(); 
+    g->addNode('A');
+    g->addNode('B');
+    g->addNode('C');
+    g->addNode('D');
+    g->addNode('E');
+    g->addNode('F');
+    g->addNode('G');
+    g->addNode('H');
+    g->addNode('I');
 
-
-
-    myGraph2.printAdjacencyList();
+    g->addEdge('A', 'B', 5);
+    g->addEdge('A', 'C', 25);
+    g->addEdge('B', 'F', 33);
+    g->addEdge('B', 'E', 11);
+    g->addEdge('C', 'D', 17);
+    g->addEdge('C', 'F', 38);
+    g->addEdge('D', 'G', 12);
+    g->addEdge('E', 'F', 21);
+    g->addEdge('E', 'I', 1);
+    g->addEdge('F', 'D', 4);
+    g->addEdge('F', 'G', 3);
+    g->addEdge('G', 'H', 50);
+    g->addEdge('H', 'F', 41);
+    g->addEdge('I', 'F', 2);
+    g->addEdge('I', 'H', 21);
     
+    /* cout << "A*" << endl;
+    g->Astar('A','I');
+    cout << endl; */
+
+    cout << "BELLMAN FORD" << endl;
+    graph bf = g->bellmanFord('A');
+    bf.printRoute();
     cout << endl;
-    
-   /* myGraph2.printAdjacencyList();
 
+    /* cout << "DIJKSTRA" << endl;
+    g->dijkstra(g->findNode('A')); */
+
+    cout << "GREEDY BFS" << endl;
+    graph gbfs = g->greedy_bfs('A', 'H');
+    gbfs.printRoute();
     cout << endl;
 
-    graph pGraph1 = myGraph1.prim();
-    pGraph1.printAdjacencyList();
-
+    cout << "FLOYD WARSHALL" << endl;
+    g->floydWarshall();
     cout << endl;
-
-    //graph kGraph = myGraph.kruskal();
-    //kGraph.printAdjacencyList();
-
-    cout << "is connected: " << myGraph1.isConnected() << endl;
-    cout << "is fuerteconnected: " << myGraph1.isFuertementeConexo() << endl;
-
-    cout << "is connected: " << myGraph2.isConnected() << endl;
-    cout << "is fuerteconnected: " << myGraph2.isFuertementeConexo() << endl;*/
-    //map<Node*, int> distance;
-    
-    graph bellmanFord = myGraph2.bellmanFord('A');
-
-    bellmanFord.printRoute();
-    
-    cout<<endl;
-
-
-
-    graph greedy = myGraph1.greedy_bfs('A','B');
-    
-    //cout<<greedy.getNodeCount();
-    greedy.printRoute();
-
-    //cout << "find edge H-Z: " << (myGraph.findEdge('H','Z') != nullptr) << endl;
-
-    return 0;
 }
-
