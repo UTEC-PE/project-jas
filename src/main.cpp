@@ -32,7 +32,7 @@ int main()
     g->addEdge('G', 'H', 50);
     g->addEdge('H', 'F', 41);
     g->addEdge('I', 'F', 2);
-    g->addEdge('I', 'H', 21);
+    g->addEdge('I', 'H', 14);
     
     /* cout << "A*" << endl;
     g->Astar('A','I');
@@ -43,8 +43,8 @@ int main()
     bf.printRoute();
     cout << endl;
 
-    /* cout << "DIJKSTRA" << endl;
-    g->dijkstra(g->findNode('A')); */
+    cout << "DIJKSTRA" << endl;
+    g->dijkstra(g->findNode('A'));
 
     cout << "GREEDY BFS" << endl;
     graph gbfs = g->greedy_bfs('A', 'H');

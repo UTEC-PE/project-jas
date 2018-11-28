@@ -875,9 +875,11 @@ void printRoute(){
 
         for (int i = 0; i < nodeCount; i++)
         {
-            node* &currentNode = nodes[i];
+            
             int u = minDistance(distances, visited);
             visited[u] = true;
+
+            node* &currentNode = nodes[u];
 
             for (int j = 0; j < currentNode->edges.size(); j++)
             {
