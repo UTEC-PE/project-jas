@@ -739,8 +739,23 @@ void printRoute(){
     std::vector<std::vector<int>> floydWarshall()
     {
         sort(nodes.begin(), nodes.end(), nodeCmp());
-
         int inf = 999999;
+        std::vector<std::vector<int>> iterations(nodeCount, std::vector<int>(nodeCount, 0));
+
+        for (int i = 0; i < nodeCount; i++)
+        {
+            int k = 1;
+            for (int j = 0; j < nodeCount; j++)
+            {
+                if (i != j)
+                {
+                    iterations[i][j] = k;
+                }
+                    
+                k++;
+            }
+        }
+
         int n_size = nodes.size();
 
         std::map<node*, int> pos;
@@ -776,6 +791,7 @@ void printRoute(){
                     if (dist[i][j] > dist [i][k] +  dist[k][j])
                     {
                         dist[i][j] = dist [i][k] +  dist[k][j];
+                        iterations[i][j] = k;
                     }
                 }
             }
@@ -792,6 +808,16 @@ void printRoute(){
         }
         std::cout << std::endl;
         
+        for (int i = 0; i < dist.size(); i++)
+        {
+            for (int j = 0; j < dist[i].size(); j++)
+            {
+                std::cout << iterations[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << std::endl;
+
         return dist;
     }
     
@@ -823,6 +849,7 @@ void printRoute(){
 
     void dijkstra(node* start)
     {
+        sort(nodes.begin(), nodes.end(), nodeCmp());
         int inf = 9999;
         std::vector<std::pair<node*, int>> distances(nodeCount, std::make_pair(nullptr, 9999));
 
